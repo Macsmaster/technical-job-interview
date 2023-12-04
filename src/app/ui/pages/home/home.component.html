@@ -1,0 +1,15 @@
+<section class="bp-my-5 bp-w-100 bp-justify-center bp-d-flex">
+  <div class="  bp-col-8">
+    <section class="bp-justify-between bp-d-flex bp-w-100 ">
+      <app-input-filter></app-input-filter>
+      <app-button [textBtn]="'Agregar'" [isPrimary]="true" [routerLink]="'/create'"></app-button>
+    </section>
+
+    <app-products-list
+      [products$]="tableData$"
+      (onMakeDropdownAction)="onNavigateEditionPage($event)"
+      [headers]="headers"
+    ></app-products-list>
+  </div>
+
+</section>

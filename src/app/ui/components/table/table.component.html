@@ -1,0 +1,14 @@
+<table>
+  <thead>
+    <tr>
+      <ng-container *ngIf="headers?.length">
+        <th *ngFor="let header of headers">{{ header }}</th>
+      </ng-container>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of data">
+      <td *ngFor="let header of headers">{{ product[header] }}</td>
+    </tr>
+  </tbody>
+</table>

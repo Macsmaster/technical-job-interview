@@ -1,0 +1,27 @@
+$table-background-color: #ffffff; // replace with your preferred color
+$scrollbar-thumb-color: #888888; // replace with your preferred color
+$scrollbar-thumb-hover-color: #555555; // replace with your preferred color
+
+table {
+  background-color: $table-background-color;
+  overflow: auto;
+  max-height: 500px; // replace with your preferred value
+
+  &::-webkit-scrollbar {
+    width: 10px; // replace with your preferred value
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $scrollbar-thumb-color;
+    border-radius: 5px; // replace with your preferred value
+
+    &:hover {
+      background-color: $scrollbar-thumb-hover-color;
+    }
+  }
+
+  tfoot {
+    position: sticky;
+    bottom: 0;
+  }
+}

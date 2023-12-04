@@ -1,0 +1,33 @@
+<table>
+  <thead>
+    <tr>
+      <ng-container *ngIf="headers?.length">
+        <th *ngFor="let header of headers">{{ header }}</th>
+      </ng-container>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of ( products$ | async); tracckBy: trackByFn">
+      <td><img [src]="product.logo" [alt]="product.name"></td>
+      <td>{{product.name}}</td>
+
+
+      <td>{{product.description}}</td>
+
+      <td>{{product.date_release | date : 'dd/MM/yyyy' }}</td>
+      <td>{{product.date_revision | date : 'dd/MM/yyyy' }}</td>
+      <td type="action"><button (click)="onDropdownAction(product.id)">action</button></td>
+    </tr>
+  </tbody>
+  <tfoot class="">
+    <tr class="bp-justify-between ">
+      <td colspan="6">{{(products$ | async)?.length}} Resultados</td>
+      <select id="pageSize" [(ngModel)]="pageSize">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+    </tr>
+  </tfoot>
+
+</table>

@@ -1,0 +1,10 @@
+<div class="modal" *ngIf="showModal">
+  <h5>{{modalTitle}}</h5>
+  <div class="modal-content">
+    <p>{{ modalText }}</p>
+    <div class="modal-buttons">
+      <button *ngIf="showPrimaryBtn" (click)="onButtonClick()">{{ button1Text }}</button>
+      <button *ngIf="showSecondaryBtn" (click)="handleButton2Click()">{{ button2Text }}</button>
+    </div>
+  </div>
+</div>

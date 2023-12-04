@@ -1,0 +1,12 @@
+<div class="card">
+  <img class="card__image" [src]="imgUrl" alt="Card image" *ngIf="imgUrl">
+  <div class="card__content">
+    <h2 class="card__title">{{title}}</h2>
+    <p class="card__text" *ngIf="description">{{description}}</p>
+    <ng-content></ng-content>
+    <section class="card__footer" *ngIf="showFooter">
+      <a href="#" class="card__button">Go somewhere</a>
+    </section>
+
+  </div>
+</div>

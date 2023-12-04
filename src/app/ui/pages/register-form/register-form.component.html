@@ -1,0 +1,104 @@
+<section class="bp-mt-5 bp-d-flex bp-justify-center">
+  <div class="bp-col-8">
+    <app-card>
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+        (keypress.enter)="onSubmit()"
+      >
+        <div>
+          <label for="id">ID</label>
+          <input
+            [ngClass]="{
+              'bp-border-danger': registerForm.controls['id'].invalid &&
+                registerForm.controls['id'].touched &&
+                !registerForm.controls['id'].errors?.['minlength']
+            }"
+            id="id"
+            type="text"
+            formControlName="id"
+            [maxLength]="3"
+            required
+          />
+          <span
+            class="bp-color-danger"
+            *ngIf="
+              registerForm.controls['id'].invalid &&
+              registerForm.controls['id'].touched
+              &&
+            !registerForm.controls['id'].errors?.['minlength']
+            "
+            >Campo requerido *</span
+          >
+          <span
+          class="bp-color-danger"
+          *ngIf="
+            registerForm.controls['id'].invalid &&
+            registerForm.controls['id'].errors?.['minlength'] &&
+            registerForm.controls['id'].touched &&
+            !registerForm.controls['id'].pristine
+          "
+          >Ingrese mínimo 3 carácteres*</span
+        >
+        </div>
+
+        <div>
+          <label for="name">Nombre</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            [minLength]="3"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="description">Descripción</label>
+          <input id="name" type="text" formControlName="description" required />
+        </div>
+
+        <div>
+          <label for="logo">Logo</label>
+          <input id="logo" type="text" formControlName="logo" required />
+        </div>
+
+        <div>
+          <label for="date_release">Fecha Liberación</label>
+          <input
+            id="date_release"
+            type="date"
+            formControlName="date_release"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="date_revision">Fecha Revisión</label>
+          <input
+
+            id="date_revision"
+            type="date"
+            formControlName="date_revision"
+            required
+          />
+        </div>
+
+        <section class="bp-d-flex bp-justify-space-evenly bp-w-100">
+          <app-button
+            [textBtn]="'Reiniciar'"
+            [isPrimary]="false"
+            type="button"
+            (click)="onReset()"
+          ></app-button>
+          <app-button
+            [textBtn]="'Enviar'"
+            [isPrimary]="true"
+            [isDisabled]="registerForm.invalid"
+            [type]="'submit'"
+          ></app-button>
+        </section>
+      </form>
+    </app-card>
+  </div>
+</section>

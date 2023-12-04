@@ -1,0 +1,49 @@
+$modal-background-color: rgba(
+  0,
+  0,
+  0,
+  0.5
+); // replace with your preferred color
+$modal-content-background-color: #ffffff; // replace with your preferred color
+$button-color: #007bff; // replace with your preferred color
+$button-hover-color: darken($button-color, 10%);
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $modal-background-color;
+}
+
+.modal-content {
+  background-color: $modal-content-background-color;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: $button-color;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $button-hover-color;
+  }
+}
