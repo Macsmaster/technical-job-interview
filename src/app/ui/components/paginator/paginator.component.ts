@@ -61,9 +61,9 @@ export class PaginatorComponent implements OnInit, AfterViewInit {
   constructor() {}
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+
   }
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+
   }
 }

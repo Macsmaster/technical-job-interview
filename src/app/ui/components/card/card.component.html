@@ -2,7 +2,7 @@
   <img class="card__image" [src]="imgUrl" alt="Card image" *ngIf="imgUrl">
   <div class="card__content">
     <h1 class="card__title bp-text-center">{{title}}</h1>
-    <hr class="bp-my-2 bp-w-100">
+    <hr class="bp-my-2 bp-w-100 ">
     <p class="card__text" *ngIf="description">{{description}}</p>
     <ng-content></ng-content>
     <section class="card__footer" *ngIf="showFooter">

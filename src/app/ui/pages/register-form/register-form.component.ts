@@ -53,8 +53,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.initializeForm();
-    this.subscribeToRouteParams();
+    this._initializeForm();
+    this._subscribeToRouteParams();
   }
 
   ngOnDestroy(): void {
@@ -64,12 +64,12 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.notificationService.emitClose();
   }
 
-  private initializeForm(): void {
+  private _initializeForm(): void {
     this.loadForm();
     this.onSubscripteDateRelease();
   }
 
-  private subscribeToRouteParams(): void {
+  private _subscribeToRouteParams(): void {
     this.subscriptions$.push(
       this.route.paramMap.subscribe((params) => {
         const productId = params.get('id');
@@ -77,16 +77,16 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
 
         const navigationState = history.state;
         if (navigationState && navigationState.product) {
-          this.handleEditionPage(navigationState.product);
+          this._handleEditionPage(navigationState.product);
         }
       })
     );
   }
 
-  private handleEditionPage(product: any): void {
+  private _handleEditionPage(product: any): void {
     this.editedProduct = product;
-    const dateRelease = this.onFormatDate(this.editedProduct?.date_release);
-    const dateRevision = this.onFormatDate(this.editedProduct?.date_revision);
+    const dateRelease = this._onFormatDate(this.editedProduct?.date_release);
+    const dateRevision = this._onFormatDate(this.editedProduct?.date_revision);
 
     this.formControls['id'].disable();
 
@@ -135,7 +135,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.formControls['date_revision'].disable();
   }
 
-  onFormatDate(date: Date) {
+ private _onFormatDate(date: Date) {
     const setDate = new Date(date);
     setDate.setFullYear(setDate.getFullYear());
     const formattedDate = setDate.toISOString().split('T')[0];
@@ -148,7 +148,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     date.setFullYear(date.getFullYear() + 1);
 
     this.registerForm.controls[controlDestiny].setValue(
-      this.onFormatDate(date)
+      this._onFormatDate(date)
     );
   }
 

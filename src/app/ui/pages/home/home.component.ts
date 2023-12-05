@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -13,13 +14,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductModel } from '../../../domain/models/product/product.model';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../components/button/button.component';
-import { NavigationExtras, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { NotificationService } from '../../../core/services/notification/notification.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
 import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
+import { TABLE_HEADERS } from '../constants/table.const';
 
 @Component({
   selector: 'app-home',
@@ -45,21 +47,61 @@ import { LoaderComponent } from '../../../shared/components/loader/loader.compon
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('modalDelete') modalDelete!: ModalComponent;
 
-  headers: string[] = [
-    'Logo',
-    'Nombre del producto',
-    'Descripción',
-    'Fecha de liberación',
-    'Fecha de revisión',
-    '',
-  ];
+  /**
+   *
+   *
+   * @type {string[]}
+   * @memberof HomeComponent
+   */
+  headers: string[] = TABLE_HEADERS;
+  /**
+   *
+   *
+   * @type {boolean}
+   * @memberof HomeComponent
+   */
   showModal: boolean = false;
 
-  tableData: ProductModel[] = [];
-  allProducts: any[] = [];
-  filteredProducts: any[] = [];
+  /**
+   *
+   *
+   * @type {ProductModel[]}
+   * @memberof HomeComponent
+   */
+  /**
+   *
+   *
+   * @type {ProductModel[]}
+   * @memberof HomeComponent
+   */
+  allProducts: ProductModel[] = [];
+  /**
+   *
+   *
+   * @type {ProductModel[]}
+   * @memberof HomeComponent
+   */
+  filteredProducts: ProductModel[] = [];
+  /**
+   *
+   *
+   * @type {FormControl}
+   * @memberof HomeComponent
+   */
   searchControl: FormControl = new FormControl('');
+  /**
+   *
+   *
+   * @type {(ProductModel | null)}
+   * @memberof HomeComponent
+   */
   selectedProduct: ProductModel | null = null;
+  /**
+   *
+   *
+   * @type {number}
+   * @memberof HomeComponent
+   */
   pageSize!: number;
   /**
    * Creates an instance of HomeComponent.
@@ -67,13 +109,28 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @memberof HomeComponent
    */
 
+  /**
+   *
+   *
+   * @memberof HomeComponent
+   */
   public loadingView$ = this.loaderService.visibility$
+  /**
+   * Creates an instance of HomeComponent.
+   * @param {ProductService} _productService
+   * @param {Router} router
+   * @param {ChangeDetectorRef} cd
+   * @param {NotificationService} _notificationService
+   * @param {LoaderService} loaderService
+   * @memberof HomeComponent
+   */
   constructor(
     private _productService: ProductService,
     private router: Router,
     private cd: ChangeDetectorRef,
-    private notificationService: NotificationService,
-    private loaderService: LoaderService
+    private _notificationService: NotificationService,
+    private loaderService: LoaderService,
+    private ngZone: NgZone
   ) {}
 
   /**
@@ -86,15 +143,32 @@ export class HomeComponent implements OnInit, OnDestroy {
     this._setupSearchControlSubscription();
   }
 
+  /**
+   *
+   *
+   * @memberof HomeComponent
+   */
   ngOnDestroy(): void {
-      this.notificationService.emitClose();
+      this._notificationService.emitClose();
   }
 
+  /**
+   *
+   *
+   * @param {number} pageSize
+   * @memberof HomeComponent
+   */
   onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
     this._updateFilteredProducts(this.allProducts);
   }
 
+  /**
+   *
+   *
+   * @private
+   * @memberof HomeComponent
+   */
   private _initializeData(): void {
     this._productService.getProducts().subscribe((products) => {
       this._updateProductData(products);
@@ -102,6 +176,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   *
+   *
+   * @private
+   * @memberof HomeComponent
+   */
   private _setupSearchControlSubscription(): void {
     const inputChanges$ = this.searchControl.valueChanges.pipe(
       startWith(''),
@@ -119,6 +199,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     merge(inputChanges$, blurChanges$).subscribe((filteredData) => this._updateFilteredProducts(filteredData));
   }
 
+  /**
+   *
+   *
+   * @private
+   * @param {string} searchTerm
+   * @return {*}  {Observable<any[]>}
+   * @memberof HomeComponent
+   */
   private _filterProducts(searchTerm: string): Observable<any[]> {
     return of(
       this.allProducts.filter((product) =>
@@ -127,14 +215,34 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _updateProductData(products: any[]): void {
+  /**
+   *
+   *
+   * @private
+   * @param {ProductModel[]} products
+   * @memberof HomeComponent
+   */
+  private _updateProductData(products: ProductModel[]): void {
     this.allProducts = this.filteredProducts = products;
   }
 
-  private _updateFilteredProducts(filteredData: any[]): void {
+  /**
+   *
+   *
+   * @private
+   * @param {ProductModel[]} filteredData
+   * @memberof HomeComponent
+   */
+  private _updateFilteredProducts(filteredData: ProductModel[]): void {
     this.filteredProducts = filteredData.slice(0, this.pageSize);
   }
 
+  /**
+   *
+   *
+   * @param {*} option
+   * @memberof HomeComponent
+   */
   onDropDownActions(option: any) {
     this.selectedProduct = option.product;
     if (option.option === 'edit') {
@@ -143,20 +251,40 @@ export class HomeComponent implements OnInit, OnDestroy {
           product: this.selectedProduct
         }
       };
-      this.router.navigate([`update/${option.product.id}`], navigationExtras);
+      this.ngZone.run(() => {
+        this.router.navigate([`update/${option.product.id}`], navigationExtras);
+      });
+
     }
     if (option.option === 'delete') {
       this.onOpenModal();
     }
   }
 
+  /**
+   *
+   *
+   * @memberof HomeComponent
+   */
   onOpenModal() {
     this.showModal = true;
   }
 
+  /**
+   *
+   *
+   * @memberof HomeComponent
+   */
   onCloseModal() {
     this.showModal = false;
   }
+
+  /**
+   *
+   *
+   * @return {*}
+   * @memberof HomeComponent
+   */
   onDeleteProduct() {
     if (this.selectedProduct === null) {
       return;
@@ -164,10 +292,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this._productService
       .deleteProduct(this.selectedProduct?.id)
-      .subscribe((response) => {
-        this.notificationService.showSuccess('Producto eliminado exitosamente');
+      .subscribe(() => {
+        this._notificationService.showSuccess('Producto eliminado exitosamente');
       });
-      this.notificationService.showSuccess('Producto eliminado exitosamente');
+      this._notificationService.showSuccess('Producto eliminado exitosamente');
     this.filteredProducts = this.filteredProducts.filter(product => product.id !== this.selectedProduct?.id);
 
     this.onCloseModal();

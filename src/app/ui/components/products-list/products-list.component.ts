@@ -42,18 +42,57 @@ export class ProductsListComponent {
    */
   @Input() products$!: ProductModel[];
 
+  /**
+   *
+   *
+   * @type {number}
+   * @memberof ProductsListComponent
+   */
   @Input() pageSize: number = 5;
+  /**
+   *
+   *
+   * @type {boolean}
+   * @memberof ProductsListComponent
+   */
   @Input() showDropdown: boolean = false;
 
+  /**
+   *
+   *
+   * @type {EventEmitter<any>}
+   * @memberof ProductsListComponent
+   */
   @Output() onMakeDropdownAction: EventEmitter<any> = new EventEmitter<any>();
+  /**
+   *
+   *
+   * @type {EventEmitter<any>}
+   * @memberof ProductsListComponent
+   */
   @Output() doPageSizeChangeAction: EventEmitter<any> = new EventEmitter<any>();
 
 
 
+  /**
+   *
+   *
+   * @param {number} index
+   * @param {*} item
+   * @return {*}  {number}
+   * @memberof ProductsListComponent
+   */
   trackByFn(index: number, item: any): number {
     return index;
   }
 
+  /**
+   *
+   *
+   * @param {ProductModel} product
+   * @param {string} option
+   * @memberof ProductsListComponent
+   */
   onDropdownAction(product: ProductModel, option: string): void {
     const action = {
       product,
@@ -62,14 +101,31 @@ export class ProductsListComponent {
     this.onMakeDropdownAction.emit(action)
   }
 
+  /**
+   *
+   *
+   * @memberof ProductsListComponent
+   */
   openDropdown(): void {
     this.showDropdown = !this.showDropdown;
   }
 
+  /**
+   *
+   *
+   * @memberof ProductsListComponent
+   */
   onPageSizeChange() {
     this.doPageSizeChangeAction.emit(this.pageSize)
   }
 
+  /**
+   *
+   *
+   * @param {string} name
+   * @return {*}  {string}
+   * @memberof ProductsListComponent
+   */
   getInitials(name: string): string {
     const words = name.split(' ');
     let initials = '';
@@ -77,13 +133,19 @@ export class ProductsListComponent {
     for (const word of words) {
       initials += word.charAt(0);
       if (initials.length >= 2) {
-        break; // Exit the loop when 2 initials are obtained
+        break;
       }
     }
-
     return initials.toUpperCase();
   }
 
+  /**
+   *
+   *
+   * @param {string} url
+   * @return {*}  {boolean}
+   * @memberof ProductsListComponent
+   */
   imageExists(url: string): boolean {
     const img = new Image();
     img.src = url;
