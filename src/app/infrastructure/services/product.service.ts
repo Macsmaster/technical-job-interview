@@ -64,7 +64,8 @@ export class ProductService {
    */
   updateProduct(data: ProductModel): Observable<ProductModel> {
     const headers = new HttpHeaders().set('authorId', '108');
-   return this.httpClient.put<ProductModel>(this._API_URL, data, { headers });
+    const url = `${this._API_URL}`;
+   return this.httpClient.put<ProductModel>(url, data, { headers });
   }
 
   /**

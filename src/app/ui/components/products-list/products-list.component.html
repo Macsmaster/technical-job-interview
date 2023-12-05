@@ -1,57 +1,67 @@
-
 <section class="table__container">
+  <table>
+    <thead>
+      <tr>
+        <ng-container *ngIf="headers?.length">
+          <th hidden>Id</th>
+          <th class="bp-text-center" *ngFor="let header of headers">{{ header }}</th>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products$ | slice : 0 : pageSize">
+        <td hidden>{{ product.id }}</td>
+        <td class="bp-d-flex bp-justify-center">
+          <ng-container *ngIf="imageExists(product.logo)">
+            <img [src]="product.logo" [alt]="product.name" />
+          </ng-container>
+          <ng-container *ngIf="!imageExists(product.logo)">
+            <div class="initials-circle">{{ getInitials(product.name) }}</div>
+          </ng-container>
+        </td>
 
+        <td>{{ product.name }}</td>
 
-<table>
-  <thead>
-    <tr>
-      <ng-container *ngIf="headers?.length">
-        <th *ngFor="let header of headers">{{ header }}</th>
-      </ng-container>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let product of products$ | slice:0:pageSize; tracckBy: trackByFn">
-      <td><img [src]="product.logo" [alt]="product.name"></td>
-      <td>{{product.name}}</td>
+        <td>{{ product.description }}</td>
 
-
-      <td>{{product.description}}</td>
-
-      <td>{{product.date_release | date : 'dd/MM/yyyy' }}</td>
-      <td>{{product.date_revision | date : 'dd/MM/yyyy' }}</td>
-      <td type="action">
-        <img src="../../../../assets/icons/more_vertical.svg" (click)="openDropdown()" />
-        <div class="dropdown" *ngIf="showDropdown">
-          <ul>
-            <li><a (click)="onDropdownAction" (click)="onDropdownAction(product, 'edit')">Editar</a></li>
-            <li><a (click)="onDropdownAction(product, 'delete')">Eliminar</a></li>
-          </ul>
+        <td>{{ product.date_release | date : "dd/MM/yyyy" }}</td>
+        <td>{{ product.date_revision | date : "dd/MM/yyyy" }}</td>
+        <td type="action">
+          <img
+            src="../../../../assets/icons/more_vertical.svg"
+            (click)="openDropdown()"
+          />
+          <div class="dropdown" *ngIf="showDropdown">
+            <ul>
+              <li>
+                <a
+                  (click)="(onDropdownAction)"
+                  (click)="onDropdownAction(product, 'edit')"
+                  >Editar</a
+                >
+              </li>
+              <li>
+                <a (click)="onDropdownAction(product, 'delete')">Eliminar</a>
+              </li>
+            </ul>
           </div>
         </td>
-    </tr>
-  </tbody>
+      </tr>
+    </tbody>
+  </table>
 
-
-</table>
-
-<section class="bp-d-flex bp-justify-between bp-mx-2 bp-my-1">
-
-
-  <p>
-    {{products$.length}} Resultados
-  </p>
-  <div class="">
-    <select id="pageSize"  [(ngModel)]="pageSize" (change)="onPageSizeChange()">
-      <option value="5" selected>5</option>
-      <option value="10">10</option>
-      <option value="20">20</option>
-    </select>
-  </div>
-
-
-
-
-</section>
-
+  <section class="bp-d-flex bp-justify-between bp-mx-2 bp-my-1">
+    <p>{{ products$.length }} Resultados</p>
+    <div class="">
+      <select
+        id="pageSize"
+        [(ngModel)]="pageSize"
+        (change)="onPageSizeChange()"
+      >
+        <option value="5" selected>5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+      </select>
+    </div>
+  </section>
 </section>

@@ -55,3 +55,10 @@ input[type="date"][disabled] {
   opacity: 0.5; /* Reduce opacity to make it look disabled */
   pointer-events: none; /* Ignore pointer events */
 }
+
+input[type="text"][disabled] {
+  color: #888;
+  background-color: #f0f0f0;
+  opacity: 0.5; /* Reduce opacity to make it look disabled */
+  pointer-events: none; /* Ignore pointer events */
+}

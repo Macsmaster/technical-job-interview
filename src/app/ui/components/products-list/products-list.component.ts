@@ -70,4 +70,24 @@ export class ProductsListComponent {
     this.doPageSizeChangeAction.emit(this.pageSize)
   }
 
+  getInitials(name: string): string {
+    const words = name.split(' ');
+    let initials = '';
+
+    for (const word of words) {
+      initials += word.charAt(0);
+      if (initials.length >= 2) {
+        break; // Exit the loop when 2 initials are obtained
+      }
+    }
+
+    return initials.toUpperCase();
+  }
+
+  imageExists(url: string): boolean {
+    const img = new Image();
+    img.src = url;
+    return img.complete || (img.width + img.height) > 0;
+  }
+
 }

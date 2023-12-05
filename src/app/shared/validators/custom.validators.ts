@@ -26,11 +26,17 @@ export class CustomValidators {
   }
 
   private static parseDate(dateString: string): Date | null {
+    if (!dateString) {
+      return null;
+    }
+
     const parts = dateString.split('-');
+
     if (parts.length === 3) {
       const [year, month, day] = parts.map(Number);
       return new Date(year, month - 1, day); // Months are zero-based in JavaScript Dates
     }
+
     return null;
   }
 }

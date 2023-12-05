@@ -6,38 +6,36 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { InputFilterComponent } from '../../components/input-filter/input-filter.component';
 import { ProductsListComponent } from '../../components/products-list/products-list.component';
-import { TableComponent } from '../../components/table/table.component';
 import { ProductService } from '../../../infrastructure/services/product.service';
 import { Observable, debounceTime, filter, merge, of, pairwise, skip, startWith, switchMap } from 'rxjs';
-import { DataEndpoint } from '../../../shared/models/api.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductModel } from '../../../domain/models/product/product.model';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../components/button/button.component';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationExtras, Router, RouterModule } from '@angular/router';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { NotificationService } from '../../../core/services/notification/notification.service';
-import { AlertComponent } from '../../../shared/components/alert/alert/alert.component';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
+import { LoaderService } from '../../../core/services/loader/loader.service';
+import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    InputFilterComponent,
+
     FormsModule,
     ProductsListComponent,
-    TableComponent,
     HttpClientModule,
     CommonModule,
     ButtonComponent,
     RouterModule,
     ModalComponent,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoaderComponent
   ],
   providers: [ProductService],
   templateUrl: './home.component.html',
@@ -48,10 +46,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('modalDelete') modalDelete!: ModalComponent;
 
   headers: string[] = [
-    'Nombre',
-    'Descripción',
     'Logo',
-    'Fecha de creación',
+    'Nombre del producto',
+    'Descripción',
+    'Fecha de liberación',
     'Fecha de revisión',
     '',
   ];
@@ -68,11 +66,14 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @param {ProductService} _productService
    * @memberof HomeComponent
    */
+
+  public loadingView$ = this.loaderService.visibility$
   constructor(
     private _productService: ProductService,
     private router: Router,
     private cd: ChangeDetectorRef,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private loaderService: LoaderService
   ) {}
 
   /**
@@ -91,8 +92,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
-    // You may want to fetch data again based on the new page size
-    // For simplicity, assuming allProducts contains all data
     this._updateFilteredProducts(this.allProducts);
   }
 
@@ -139,7 +138,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   onDropDownActions(option: any) {
     this.selectedProduct = option.product;
     if (option.option === 'edit') {
-      this.router.navigateByUrl(`update/${option.productId}`);
+      const navigationExtras: NavigationExtras = {
+        state: {
+          product: this.selectedProduct
+        }
+      };
+      this.router.navigate([`update/${option.product.id}`], navigationExtras);
     }
     if (option.option === 'delete') {
       this.onOpenModal();
