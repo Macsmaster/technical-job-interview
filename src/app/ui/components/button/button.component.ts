@@ -13,5 +13,6 @@ export class ButtonComponent {
   @Input() type: string = 'submit';
   @Input() isDisabled: boolean = false;
   @Input() isPrimary: boolean = false;
+  @Input() size: 'small' | 'medium' |  'large' | 'xl' = 'medium' ;
 
 }

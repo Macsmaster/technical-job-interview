@@ -1,4 +1,5 @@
 @import "./tokens/colors.scss";
+@import "./tokens/fonts/fonts.scss";
 
 .bp-bg {
   &-none {
@@ -256,6 +257,24 @@
 
 $grid-gutter-width: 30px;
 
+$breakpoints: (
+  xs: 320px,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+);
+
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @error "No se encontró el breakpoint '#{$breakpoint}' en la lista de breakpoints.";
+  }
+}
+
 @mixin make-row() {
   display: flex;
   flex-wrap: wrap;
@@ -270,13 +289,27 @@ $grid-gutter-width: 30px;
   padding-left: $grid-gutter-width / 2;
 }
 
-.row {
+.bp-row {
   @include make-row();
-}
 
-@for $i from 1 through 12 {
-  .bp-col-#{$i} {
-    @include make-column($i / 12);
+  @for $i from 1 through 12 {
+    .bp-col-#{$i} {
+      @include make-column($i / 12);
+    }
+  }
+
+  @each $breakpoint, $width in $breakpoints {
+    @include respond-to($breakpoint) {
+      @for $i from 1 through 12 {
+        .bp-col-#{$breakpoint}-#{$i} {
+          @if $i == 1 {
+            @include make-column($i / 12);
+          } @else {
+            @include make-column($i / 12 - ($grid-gutter-width / 2) / $width);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -436,5 +469,239 @@ $grid-gutter-width: 30px;
   }
   &-danger {
     border-color: $color-danger-00 !important;
+  }
+}
+
+.bp-text {
+  &-center {
+    text-align: center;
+  }
+  &-left {
+    text-align: left;
+  }
+  &-right {
+    text-align: right;
+  }
+  &-justify {
+    text-align: justify;
+  }
+  &-uppercase {
+    text-transform: uppercase;
+  }
+  &-lowercase {
+    text-transform: lowercase;
+  }
+  &-capitalize {
+    text-transform: capitalize;
+  }
+  &-nowrap {
+    white-space: nowrap;
+  }
+  &-break-word {
+    word-wrap: break-word;
+  }
+  &-break-all {
+    word-break: break-all;
+  }
+}
+
+.bp-line-height {
+  &-1 {
+    line-height: 1;
+  }
+  &-2 {
+    line-height: 2;
+  }
+  &-3 {
+    line-height: 3;
+  }
+  &-4 {
+    line-height: 4;
+  }
+  &-5 {
+    line-height: 5;
+  }
+}
+
+.bp-font-size {
+  &-1 {
+    font-size: 1rem;
+  }
+  &-2 {
+    font-size: 2rem;
+  }
+  &-3 {
+    font-size: 3rem;
+  }
+  &-4 {
+    font-size: 4rem;
+  }
+  &-5 {
+    font-size: 5rem;
+  }
+}
+
+.bp-align {
+  &-baseline {
+    vertical-align: baseline;
+  }
+  &-top {
+    vertical-align: top;
+  }
+  &-middle {
+    vertical-align: middle;
+  }
+  &-bottom {
+    vertical-align: bottom;
+  }
+}
+
+.bp-font-weight {
+  &-bold {
+    font-weight: bold;
+  }
+  &-100 {
+    font-weight: 100;
+  }
+  &-200 {
+    font-weight: 200;
+  }
+  &-300 {
+    font-weight: 300;
+  }
+  &-400 {
+    font-weight: 400;
+  }
+  &-500 {
+    font-weight: 500;
+  }
+  &-600 {
+    font-weight: 600;
+  }
+  &-700 {
+    font-weight: 700;
+  }
+  &-800 {
+    font-weight: 800;
+  }
+  &-900 {
+    font-weight: 900;
+  }
+}
+
+.bp-flex {
+  &-row {
+    flex-direction: row;
+  }
+  &-column {
+    flex-direction: column;
+  }
+  &-row-reverse {
+    flex-direction: row-reverse;
+  }
+  &-column-reverse {
+    flex-direction: column-reverse;
+  }
+  &-wrap {
+    flex-wrap: wrap;
+  }
+  &-nowrap {
+    flex-wrap: nowrap;
+  }
+  &-wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+  &-grow-0 {
+    flex-grow: 0;
+  }
+  &-grow-1 {
+    flex-grow: 1;
+  }
+  &-shrink-0 {
+    flex-shrink: 0;
+  }
+  &-shrink-1 {
+    flex-shrink: 1;
+  }
+  &-justify-start {
+    justify-content: flex-start;
+  }
+  &-justify-end {
+    justify-content: flex-end;
+  }
+  &-justify-center {
+    justify-content: center;
+  }
+  &-justify-between {
+    justify-content: space-between;
+  }
+  &-justify-around {
+    justify-content: space-around;
+  }
+  &-align-start {
+    align-items: flex-start;
+  }
+  &-align-end {
+    align-items: flex-end;
+  }
+  &-align-center {
+    align-items: center;
+  }
+  &-align-baseline {
+    align-items: baseline;
+  }
+  &-align-stretch {
+    align-items: stretch;
+  }
+  &-content-start {
+    align-content: flex-start;
+  }
+  &-content-end {
+    align-content: flex-end;
+  }
+  &-content-center {
+    align-content: center;
+  }
+  &-content-between {
+    align-content: space-between;
+  }
+  &-content-around {
+    align-content: space-around;
+  }
+  &-content-stretch {
+    align-content: stretch;
+  }
+  &-self-auto {
+    align-self: auto;
+  }
+  &-self-start {
+    align-self: flex-start;
+  }
+  &-self-end {
+    align-self: flex-end;
+  }
+  &-self-center {
+    align-self: center;
+  }
+  &-self-stretch {
+    align-self: stretch;
+  }
+}
+
+.bp-postion {
+  &-static {
+    position: static;
+  }
+  &-relative {
+    position: relative;
+  }
+  &-absolute {
+    position: absolute;
+  }
+  &-fixed {
+    position: fixed;
+  }
+  &-sticky {
+    position: sticky;
   }
 }

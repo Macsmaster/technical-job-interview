@@ -1,15 +1,34 @@
 <section class="bp-my-5 bp-w-100 bp-justify-center bp-d-flex">
-  <div class="  bp-col-8">
-    <section class="bp-justify-between bp-d-flex bp-w-100 ">
-      <app-input-filter></app-input-filter>
-      <app-button [textBtn]="'Agregar'" [isPrimary]="true" [routerLink]="'/create'"></app-button>
+  <div class="bp-col-8">
+    <section class="bp-justify-between bp-d-flex bp-w-100 bp-mb-1">
+      <input type="text" placeholder="Search" class="custom-input-text" [formControl]="searchControl" />
+      <app-button
+        [textBtn]="'Agregar'"
+        [isPrimary]="true"
+        [routerLink]="'/create'"
+      ></app-button>
     </section>
 
     <app-products-list
-      [products$]="tableData$"
-      (onMakeDropdownAction)="onNavigateEditionPage($event)"
+      [products$]="filteredProducts"
+      (onMakeDropdownAction)="onDropDownActions($event)"
       [headers]="headers"
+      (doPageSizeChangeAction)="onPageSizeChange($event)"
     ></app-products-list>
   </div>
-
 </section>
+
+<app-modal
+  #modalDelete
+  [showModal]="showModal"
+  [modalTitle]="'¿Estás seguro de eliminar el producto ' + selectedProduct?.name + '?'"
+  [modalText]="'Esta acción no se puede deshacer'"
+  [btnPrimaryName]="'Eliminar'"
+  [btnSecondaryName]="'Cancelar'"
+  (primaryBtnAction)="onDeleteProduct()"
+  (secondaryBtnAction)="onCloseModal()"
+>
+  <p></p>
+</app-modal>
+
+<

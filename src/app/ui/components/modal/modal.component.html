@@ -1,10 +1,34 @@
-<div class="modal" *ngIf="showModal">
-  <h5>{{modalTitle}}</h5>
-  <div class="modal-content">
-    <p>{{ modalText }}</p>
-    <div class="modal-buttons">
-      <button *ngIf="showPrimaryBtn" (click)="onButtonClick()">{{ button1Text }}</button>
-      <button *ngIf="showSecondaryBtn" (click)="handleButton2Click()">{{ button2Text }}</button>
+<div class="modal-overlay" (click)="closeModal($event)" *ngIf="showModal"  >
+
+  <div class="modal-container" (click)="preventClosing($event)">
+    <i class="close-icon"><img src="../../../../assets/icons/close.svg" (click)="closeModal($event)"/></i>
+    <div class="modal-header bp-mb-2 bp-mt-1">
+      <h2>{{ modalTitle }}</h2>
+    </div>
+    <div class="modal-content bp-my-2">
+      <p class="bp-text-center">
+        {{ modalText }}
+      </p>
+
+      <ng-content></ng-content>
+    </div>
+    <hr />
+    <div class="modal-footer">
+      <div class="modal-buttons bp-d-flex bp-justify-center">
+        <app-button
+          class="bp-mr-2"
+          [textBtn]="btnSecondaryName"
+          [isPrimary]="false"
+          size="xl"
+          (click)="closeModal($event)"
+        ></app-button>
+        <app-button
+          [textBtn]="btnPrimaryName"
+          size="xl"
+          [isPrimary]="true"
+          (click)="onPrimaryButtonClick($event)"
+        ></app-button>
+      </div>
     </div>
   </div>
 </div>

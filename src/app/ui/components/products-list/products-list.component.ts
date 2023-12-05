@@ -1,8 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ProductService } from '../../../infrastructure/services/product.service';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProductModel } from '../../../domain/models/product/product.model';
-import { DataEndpoint } from '../../../shared/models/api.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +8,8 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './products-list.component.html',
-  styleUrl: './products-list.component.scss'
+  styleUrl: './products-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsListComponent {
   /**
@@ -42,18 +40,34 @@ export class ProductsListComponent {
    * @type {Observable<DataEndpoint<ProductModel[]>>}
    * @memberof ProductsListComponent
    */
-  @Input() products$!: Observable<ProductModel[]>;
+  @Input() products$!: ProductModel[];
 
   @Input() pageSize: number = 5;
+  @Input() showDropdown: boolean = false;
 
-  @Output() onMakeDropdownAction: EventEmitter<string> = new EventEmitter<string>();
+  @Output() onMakeDropdownAction: EventEmitter<any> = new EventEmitter<any>();
+  @Output() doPageSizeChangeAction: EventEmitter<any> = new EventEmitter<any>();
+
+
 
   trackByFn(index: number, item: any): number {
     return index;
   }
 
-  onDropdownAction(productId: string): void {
-    this.onMakeDropdownAction.emit(productId)
+  onDropdownAction(product: ProductModel, option: string): void {
+    const action = {
+      product,
+      option
+    }
+    this.onMakeDropdownAction.emit(action)
+  }
+
+  openDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  onPageSizeChange() {
+    this.doPageSizeChangeAction.emit(this.pageSize)
   }
 
 }

@@ -1,6 +1,7 @@
-<section class="bp-mt-5 bp-d-flex bp-justify-center">
-  <div class="bp-col-8">
-    <app-card>
+<section class="bp-mt-5 bp-row bp-justify-center">
+  <div class=" bp-col-xs-11 bp-col-lg-10 ">
+    <app-card title="Formulario de Registro">
+
       <form
         [formGroup]="registerForm"
         (ngSubmit)="onSubmit()"
@@ -10,10 +11,8 @@
           <label for="id">ID</label>
           <input
             [ngClass]="{
-              'bp-border-danger': registerForm.controls['id'].invalid &&
-                registerForm.controls['id'].touched &&
-                !registerForm.controls['id'].errors?.['minlength']
-            }"
+            'bp-border-danger': isInvalid('id'),
+          }"
             id="id"
             type="text"
             formControlName="id"
@@ -21,25 +20,17 @@
             required
           />
           <span
-            class="bp-color-danger"
-            *ngIf="
-              registerForm.controls['id'].invalid &&
-              registerForm.controls['id'].touched
-              &&
-            !registerForm.controls['id'].errors?.['minlength']
-            "
-            >Campo requerido *</span
+            class="bp-color-danger bp-font-weight-bold bp-mt-1"
+            *ngIf="isRequiredError('id')"
           >
+            Este campo es requerido
+          </span>
           <span
-          class="bp-color-danger"
-          *ngIf="
-            registerForm.controls['id'].invalid &&
-            registerForm.controls['id'].errors?.['minlength'] &&
-            registerForm.controls['id'].touched &&
-            !registerForm.controls['id'].pristine
-          "
-          >Ingrese mínimo 3 carácteres*</span
-        >
+            class="bp-color-danger bp-font-weight-bold"
+            *ngIf="isMinLengthError('id')"
+          >
+            Ingrese mínimo 3 caracteres*
+          </span>
         </div>
 
         <div>
@@ -48,19 +39,63 @@
             id="name"
             type="text"
             formControlName="name"
-            [minLength]="3"
+            [minLength]="5"
+            [maxLength]="100"
             required
+            [ngClass]="{
+              'bp-border-danger': isInvalid('name'),
+            }"
           />
+          <span
+            class="bp-color-danger bp-font-weight-bold bp-mt-1"
+            *ngIf="isRequiredError('name')"
+          >
+            Este campo es requerido
+          </span>
+          <span
+            class="bp-color-danger bp-font-weight-bold"
+            *ngIf="isMinLengthError('name')"
+          >
+            Ingrese mínimo 5 caracteres
+          </span>
         </div>
 
         <div>
           <label for="description">Descripción</label>
-          <input id="name" type="text" formControlName="description" required />
+          <input
+            id="name"
+            type="text"
+            formControlName="description"
+            required
+            [ngClass]="{
+            'bp-border-danger': isInvalid('description'),
+          }"
+            [minLength]="10"
+            [maxLength]="200"
+          />
+          <span
+            class="bp-color-danger bp-font-weight-bold bp-mt-1"
+            *ngIf="isRequiredError('description')"
+          >
+            Este campo es requerido
+          </span>
+          <span
+            class="bp-color-danger bp-font-weight-bold"
+            *ngIf="isMinLengthError('description')"
+          >
+            Ingrese mínimo 10 caracteres
+          </span>
         </div>
 
         <div>
           <label for="logo">Logo</label>
           <input id="logo" type="text" formControlName="logo" required />
+          <span
+            class="bp-color-danger bp-font-weight-bold bp-mt-1"
+            *ngIf="isRequiredError('logo')"
+          >
+            Este campo es requerido
+          </span>
         </div>
 
         <div>
@@ -71,28 +106,44 @@
             formControlName="date_release"
             required
           />
+          <span
+          class="bp-color-danger bp-font-weight-bold bp-mt-1"
+          *ngIf="isRequiredError('date_release')"
+        >
+          Este campo es requerido
+        </span>
+
+        <span class="bp-color-danger bp-font-weight-bold" *ngIf="isInvalidDate('date_release')">
+          Fecha inválida
+        </span>
+        <span class="bp-color-danger bp-font-weight-bold" *ngIf="isInvalidReleaseDate('date_release')">
+          La fecha debe ser igual o superior a la fecha actual
+        </span>
         </div>
 
         <div>
           <label for="date_revision">Fecha Revisión</label>
           <input
-
             id="date_revision"
+            aria-disabled="true"
             type="date"
             formControlName="date_revision"
             required
           />
         </div>
 
-        <section class="bp-d-flex bp-justify-space-evenly bp-w-100">
+        <section class="bp-d-flex bp-justify-center bp-w-100 bp-mt-2">
           <app-button
+            class="bp-mr-5"
             [textBtn]="'Reiniciar'"
             [isPrimary]="false"
+            [size]="'large'"
             type="button"
             (click)="onReset()"
           ></app-button>
           <app-button
             [textBtn]="'Enviar'"
+            [size]="'large'"
             [isPrimary]="true"
             [isDisabled]="registerForm.invalid"
             [type]="'submit'"
@@ -102,3 +153,7 @@
     </app-card>
   </div>
 </section>
+
+{{registerForm.value | json}}
+
+

@@ -11,6 +11,7 @@ form {
       display: block;
       margin-bottom: 5px;
       color: $label-color;
+      font-weight: bolder;
     }
 
     input,
@@ -39,4 +40,18 @@ form {
       }
     }
   }
+}
+
+/* styles.scss o tu archivo .scss */
+#date_revision[disabled] {
+  background-color: #f0f0f0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+input[type="date"][disabled] {
+  color: #888;
+  background-color: #f0f0f0;
+  opacity: 0.5; /* Reduce opacity to make it look disabled */
+  pointer-events: none; /* Ignore pointer events */
 }

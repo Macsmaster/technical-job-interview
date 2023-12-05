@@ -1,18 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss'
 })
 export class ModalComponent {
-@Input() showModal: boolean = false;
- @Input() cardTitle: string = '';
+  @Input() showModal: boolean = true;
+ @Input() modalTitle: string = '';
  @Input() modalText: string = '';
- @Input() cardImage: string = '';
  @Input() buttonLink: string = '';
+ @Input() btnPrimaryName: string = '';
+ @Input() btnSecondaryName: string = '';
 
  @Input() showPrimaryBtn: boolean = true;
  @Input() showSecondaryBtn: boolean = true;
@@ -23,8 +26,15 @@ export class ModalComponent {
     this.primaryBtnAction.emit(event)
   }
 
-  onSecondaryButtonClick(event: any) {
+  closeModal(event: any) {
     this.secondaryBtnAction.emit(event)
+  }
+
+
+
+
+  preventClosing(event: Event): void {
+    event.stopPropagation();
   }
 
 }

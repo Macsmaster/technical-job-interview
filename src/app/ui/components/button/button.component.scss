@@ -1,5 +1,5 @@
 $color-primary-00: #f9de4b;
-$color-secondary-00: gray;
+$color-secondary-00: #e9ecf3;
 $color-tertiary-00: #ff0000;
 $white: #fff;
 
@@ -8,27 +8,27 @@ $white: #fff;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: bold;
   padding: 0.5rem 1rem;
-  text-transform: uppercase;
+
   transition: all 0.2s ease-in-out;
   &.btn-primary {
     background-color: $color-primary-00;
-    color: $white;
+    color: black;
     &:hover {
       background-color: darken($color-primary-00, 10%);
     }
   }
   &.btn-secondary {
     background-color: $color-secondary-00;
-    color: $white;
+    color: black;
     &:hover {
       background-color: darken($color-secondary-00, 10%);
     }
   }
   &.btn-tertiary {
     background-color: $color-tertiary-00;
-    color: $white;
+    color: black;
     &:hover {
       background-color: darken($color-tertiary-00, 10%);
     }
@@ -51,7 +51,30 @@ $white: #fff;
   }
 }
 
-button:disabled {
-  background-color: #cccccc;
+.btn-small {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+.btn-medium {
+  font-size: 14px;
+  padding: 10px 20px;
+}
+
+.btn-large {
+  font-size: 16px;
+  padding: 15px 30px;
+}
+
+.btn-xl {
+  font-size: 16px;
+  padding: 15px 3rem;
+}
+
+button[disabled] {
+  color: #888;
+  background-color: #f0f0f0;
+  opacity: 0.5;
+  pointer-events: none;
   cursor: not-allowed;
 }

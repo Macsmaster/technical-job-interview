@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DataEndpoint } from '../../shared/models/api.interface';
 import { ProductModel } from '../../domain/models/product/product.model';
@@ -12,6 +12,11 @@ export class ProductService {
   private _API_URL: string = 'https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net/ipf-msa-productosfinancieros/bp/products';
   constructor(private httpClient: HttpClient) {}
 
+  validateProductId(id: string): Observable<boolean> {
+    const params: HttpParams = new HttpParams().set('id', id);
+    const headers = new HttpHeaders().set('authorId', '108');
+    return this.httpClient.get<boolean>(`${this._API_URL}/verification`, { headers, params });
+  }
 
   /**
    *
@@ -70,8 +75,9 @@ export class ProductService {
    * @memberof ProductService
    */
   deleteProduct(id: string): Observable<{}> {
+    const params: HttpParams = new HttpParams().set('id', id);
     const headers = new HttpHeaders().set('authorId', '108');
-    const url = `${this._API_URL}/${id}`;
-    return this.httpClient.delete(url, { headers });
+    const url = `${this._API_URL}`;
+    return this.httpClient.delete(url, { headers, params }) ;
   }
 }

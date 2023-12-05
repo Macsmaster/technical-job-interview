@@ -1,3 +1,7 @@
+
+<section class="table__container">
+
+
 <table>
   <thead>
     <tr>
@@ -7,7 +11,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let product of ( products$ | async); tracckBy: trackByFn">
+    <tr *ngFor="let product of products$ | slice:0:pageSize; tracckBy: trackByFn">
       <td><img [src]="product.logo" [alt]="product.name"></td>
       <td>{{product.name}}</td>
 
@@ -16,18 +20,38 @@
 
       <td>{{product.date_release | date : 'dd/MM/yyyy' }}</td>
       <td>{{product.date_revision | date : 'dd/MM/yyyy' }}</td>
-      <td type="action"><button (click)="onDropdownAction(product.id)">action</button></td>
+      <td type="action">
+        <img src="../../../../assets/icons/more_vertical.svg" (click)="openDropdown()" />
+        <div class="dropdown" *ngIf="showDropdown">
+          <ul>
+            <li><a (click)="onDropdownAction" (click)="onDropdownAction(product, 'edit')">Editar</a></li>
+            <li><a (click)="onDropdownAction(product, 'delete')">Eliminar</a></li>
+          </ul>
+          </div>
+        </td>
     </tr>
   </tbody>
-  <tfoot class="">
-    <tr class="bp-justify-between ">
-      <td colspan="6">{{(products$ | async)?.length}} Resultados</td>
-      <select id="pageSize" [(ngModel)]="pageSize">
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-      </select>
-    </tr>
-  </tfoot>
+
 
 </table>
+
+<section class="bp-d-flex bp-justify-between bp-mx-2 bp-my-1">
+
+
+  <p>
+    {{products$.length}} Resultados
+  </p>
+  <div class="">
+    <select id="pageSize"  [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+      <option value="5" selected>5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+    </select>
+  </div>
+
+
+
+
+</section>
+
+</section>

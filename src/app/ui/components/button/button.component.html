@@ -1,7 +1,14 @@
 <button
   [type]="type"
   class="btn"
-  [ngClass]="isPrimary ? 'btn-primary' : 'btn-secondary'"
+  [ngClass]="{
+    'btn-primary': isPrimary,
+    'btn-secondary': !isPrimary,
+    'btn-small': size === 'small',
+    'btn-medium': size === 'medium',
+    'btn-large': size === 'large',
+    'btn-xl': size === 'xl'
+  }"
   [disabled]="isDisabled"
 >
   {{ textBtn }}
