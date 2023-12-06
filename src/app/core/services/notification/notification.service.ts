@@ -1,6 +1,7 @@
 import { Injectable, ComponentRef, ApplicationRef, Injector, ComponentFactoryResolver } from '@angular/core';
-import { AlertComponent } from '../../../shared/components/alert/alert/alert.component';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { Subject } from 'rxjs';
+import { DEFAULT_ALERT_DURATION } from '../../../ui/pages/constants/magic-numbers.const';
 
 @Injectable({
   providedIn: 'root'
@@ -17,38 +18,55 @@ export class NotificationService {
     private componentFactoryResolver: ComponentFactoryResolver
   ) {}
 
-  showSuccess(message: string, duration: number = 8000): void {
+  /**
+   *
+   *
+   * @param {string} message
+   * @param {number} [duration=8000]
+   * @memberof NotificationService
+   */
+  showSuccess(message: string, duration: number = DEFAULT_ALERT_DURATION): void {
     this.showAlert('success', 'Éxito', message, duration);
   }
 
-  showError(message: string, duration: number = 8000): void {
+  /**
+   *
+   *
+   * @param {string} message
+   * @param {number} [duration=8000]
+   * @memberof NotificationService
+   */
+  showError(message: string, duration: number = DEFAULT_ALERT_DURATION): void {
     this.showAlert('error', 'Error', message, duration);
   }
 
+  /**
+   *
+   *
+   * @private
+   * @param {('success' | 'error')} type
+   * @param {string} title
+   * @param {string} text
+   * @param {number} duration
+   * @memberof NotificationService
+   */
   private showAlert(type: 'success' | 'error', title: string, text: string, duration: number): void {
-    // Check if there's an active alert, and destroy it
     if (this.activeComponentRef) {
       this.destroyActiveAlert();
     }
 
-    // Resolve the component factory
     const factory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
 
-    // Create a component instance
     this.activeComponentRef = factory.create(this.injector);
 
-    // Set the input properties
     this.activeComponentRef.instance.title = title;
     this.activeComponentRef.instance.text = text;
     this.activeComponentRef.instance.type = type;
 
-    // Attach the component to the Angular application
     this.appRef.attachView(this.activeComponentRef.hostView);
 
-    // Get the root element of the component
     const domElement = (this.activeComponentRef.hostView as any).rootNodes[0] as HTMLElement;
 
-    // Append the component to the body
     document.body.appendChild(domElement);
 
 
@@ -57,11 +75,22 @@ export class NotificationService {
     }, duration);
   }
 
+  /**
+   *
+   *
+   * @memberof NotificationService
+   */
   emitClose(): void {
     this.alertSubject.next();
     this.destroyActiveAlert();
   }
 
+  /**
+   *
+   *
+   * @private
+   * @memberof NotificationService
+   */
   private destroyActiveAlert(): void {
     if (this.activeComponentRef) {
       document.body.removeChild((this.activeComponentRef.hostView as any).rootNodes[0] as HTMLElement);

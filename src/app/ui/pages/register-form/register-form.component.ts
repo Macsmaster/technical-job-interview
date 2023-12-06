@@ -1,12 +1,10 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
-  ViewChild,
 } from '@angular/core';
-import { CardComponent } from '../../components/card/card.component';
+import { CardComponent } from '../../../shared/components/card/card.component';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -14,13 +12,14 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { ButtonComponent } from '../../components/button/button.component';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { ProductService } from '../../../infrastructure/services/product.service';
 import { Subscription, mergeMap } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification/notification.service';
 import { CustomValidators } from '../../../shared/validators/custom.validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductModel } from '../../../domain/models/product/product.model';
+import { MAX_LENGTH_DESCRIPTION, MAX_LENGTH_NAME, MIN_LENGTH_DESCRIPTION, MIN_LENGTH_ID, MIN_LENGTH_NAME } from '../constants/magic-numbers.const';
 
 @Component({
   selector: 'app-register-form',
@@ -66,9 +65,15 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
 
   private _initializeForm(): void {
     this.loadForm();
-    this.onSubscripteDateRelease();
+    this._onSubscripteDateRelease();
   }
 
+  /**
+   *
+   *
+   * @private
+   * @memberof RegisterFormComponent
+   */
   private _subscribeToRouteParams(): void {
     this.subscriptions$.push(
       this.route.paramMap.subscribe((params) => {
@@ -83,6 +88,13 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   *
+   *
+   * @private
+   * @param {*} product
+   * @memberof RegisterFormComponent
+   */
   private _handleEditionPage(product: any): void {
     this.editedProduct = product;
     const dateRelease = this._onFormatDate(this.editedProduct?.date_release);
@@ -102,27 +114,38 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.registerForm.updateValueAndValidity();
   }
 
+  /**
+   *
+   *
+   * @readonly
+   * @memberof RegisterFormComponent
+   */
   get formControls() {
     return this.registerForm.controls;
   }
 
+  /**
+   *
+   *
+   * @memberof RegisterFormComponent
+   */
   loadForm() {
     this.registerForm = this.fb.group({
-      id: ['', [Validators.required, Validators.minLength(3)]],
+      id: ['', [Validators.required, Validators.minLength(MIN_LENGTH_ID)]],
       name: [
         '',
         [
           Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(100),
+          Validators.minLength(MIN_LENGTH_NAME),
+          Validators.maxLength(MAX_LENGTH_NAME),
         ],
       ],
       description: [
         '',
         [
           Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(200),
+          Validators.minLength(MIN_LENGTH_DESCRIPTION),
+          Validators.maxLength(MAX_LENGTH_DESCRIPTION),
         ],
       ],
       logo: ['', [Validators.required]],
@@ -135,14 +158,31 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.formControls['date_revision'].disable();
   }
 
- private _onFormatDate(date: Date) {
+  /**
+   *
+   *
+   * @private
+   * @param {Date} date
+   * @return {*}
+   * @memberof RegisterFormComponent
+   */
+  private _onFormatDate(date: Date) {
     const setDate = new Date(date);
     setDate.setFullYear(setDate.getFullYear());
     const formattedDate = setDate.toISOString().split('T')[0];
     return formattedDate;
   }
 
-  onFormatDateControl(controlOrigin: string, controlDestiny: string) {
+
+  /**
+   *
+   *
+   * @private
+   * @param {string} controlOrigin
+   * @param {string} controlDestiny
+   * @memberof RegisterFormComponent
+   */
+  private _onFormatDateControl(controlOrigin: string, controlDestiny: string) {
     const dateRelease = this.registerForm.controls[controlOrigin].value;
     let date = new Date(dateRelease);
     date.setFullYear(date.getFullYear() + 1);
@@ -152,12 +192,17 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSubscripteDateRelease() {
+  /**
+   *
+   *
+   * @memberof RegisterFormComponent
+   */
+  private _onSubscripteDateRelease() {
     const s$ = this.registerForm.controls[
       'date_release'
     ].valueChanges.subscribe((date: string) => {
       if (date) {
-        this.onFormatDateControl('date_release', 'date_revision');
+        this._onFormatDateControl('date_release', 'date_revision');
       }
     });
     this.subscriptions$.push(s$);
@@ -169,17 +214,15 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
    * @memberof RegisterFormComponent
    */
   onSubmit() {
-    if (this.isFormInvalid()) {
-      this.showInvalidFormAlert();
+    if (this._isFormInvalid()) {
+      this._showInvalidFormAlert();
       return;
     }
-    this.closeNotification();
+    this._closeNotification();
     if (this.isEditionPage) {
-      debugger;
       this.onUpdateProduct();
     } else {
-      debugger;
-      this.validateProductId();
+      this._validateProductId();
     }
   }
 
@@ -188,28 +231,28 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
    *
    * @returns {boolean} Verdadero si el formulario es inválido, falso de lo contrario.
    */
-  private isFormInvalid(): boolean {
+  private _isFormInvalid(): boolean {
     return this.registerForm.invalid;
   }
 
   /**
    * Muestra una alerta indicando que el formulario es inválido.
    */
-  private showInvalidFormAlert(): void {
-    alert('Formulario inválido');
+  private _showInvalidFormAlert(): void {
+    this.notificationService.showError('Formulario inválido');
   }
 
   /**
    * Cierra la notificación actual.
    */
-  private closeNotification(): void {
+  private _closeNotification(): void {
     this.notificationService.emitClose();
   }
 
-  private validateProductId(): void {
+  private _validateProductId(): void {
     const productId = this.registerForm.value.id;
 
-    this.productService
+   const s$ = this.productService
       .validateProductId(productId)
       .pipe(
         mergeMap((isProductIdValid) => {
@@ -222,13 +265,14 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        next: (response) => {
+        next: (_response) => {
           this._handleSuccessRequest('Producto creado exitosamente');
         },
-        error: (error) => {
-          console.log(error);
+        error: (_error) => {
+          this.notificationService.showError('Error al crear el producto');
         },
       });
+      this.subscriptions$.push(s$);
   }
 
   /**
@@ -244,14 +288,19 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     return this.productService.createProduct(productData);
   }
 
+  /**
+   *
+   *
+   * @memberof RegisterFormComponent
+   */
   onUpdateProduct() {
     const formData: ProductModel = {
       ...this.registerForm.value,
       id: this.formControls['id'].value,
       date_revision: this.formControls['date_revision'].value,
     };
-    this.productService.updateProduct(formData).subscribe({
-      next: (response) => {
+   const s$ = this.productService.updateProduct(formData).subscribe({
+      next: (_response) => {
         this._handleSuccessRequest('Producto modificado exitosamente');
         this.router.navigate(['/']);
       },
@@ -259,6 +308,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         console.log(error);
       },
     });
+    this.subscriptions$.push(s$);
   }
 
   /**
@@ -307,6 +357,13 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
+  /**
+   *
+   *
+   * @param {string} controlName
+   * @return {*}  {boolean}
+   * @memberof RegisterFormComponent
+   */
   isInvalid(controlName: string): boolean {
     const control = this.registerForm.controls[controlName];
     const errors = control.errors;
@@ -314,21 +371,42 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     return !!errors && control.invalid && control.touched;
   }
 
+  /**
+   *
+   *
+   * @param {string} controlName
+   * @return {*}  {boolean}
+   * @memberof RegisterFormComponent
+   */
   isRequiredError(controlName: string): boolean {
     const control = this.registerForm.controls[controlName];
     return control.invalid && control.errors?.['required'] && control.touched;
   }
 
+  /**
+   *
+   *
+   * @param {string} controlName
+   * @return {*}  {boolean}
+   * @memberof RegisterFormComponent
+   */
   isMinLengthError(controlName: string): boolean {
     const control = this.registerForm.controls[controlName];
     return (
       control.invalid &&
-      control.errors?.['minlength'] && // Use ['minlength'] to access the index signature
+      control.errors?.['minlength'] &&
       control.touched &&
       !control.pristine
     );
   }
 
+  /**
+   *
+   *
+   * @param {string} controlName
+   * @return {*}  {boolean}
+   * @memberof RegisterFormComponent
+   */
   isInvalidDate(controlName: string): boolean {
     const control = this.registerForm.controls[controlName];
     return (
@@ -336,6 +414,13 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   *
+   *
+   * @param {string} controlName
+   * @return {*}  {boolean}
+   * @memberof RegisterFormComponent
+   */
   isInvalidReleaseDate(controlName: string): boolean {
     return (
       this.registerForm.get(controlName)?.hasError('invalidReleaseDate') ||

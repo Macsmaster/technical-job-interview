@@ -5,20 +5,25 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class LoaderService {
+  visibility$ = new BehaviorSubject<boolean>(false);
+  spinnerVisibility$ = this.visibility$.asObservable();
+  constructor() {}
 
-  visibility$=new BehaviorSubject<boolean>(false);
- spinnerVisibility$=this.visibility$.asObservable()
-  constructor() {
-
-  }
-
-  show():void {
+  /**
+   *
+   *
+   * @memberof LoaderService
+   */
+  show(): void {
     this.visibility$.next(true);
   }
 
-  hide():void {
+  /**
+   *
+   *
+   * @memberof LoaderService
+   */
+  hide(): void {
     this.visibility$.next(false);
   }
-
-
 }

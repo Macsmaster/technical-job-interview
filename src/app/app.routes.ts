@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './ui/pages/home/home.component';
-import { RegisterFormComponent } from './ui/pages/register-form/register-form.component';
+
 
 export const routes: Routes = [
   {

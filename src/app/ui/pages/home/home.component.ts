@@ -9,16 +9,26 @@ import {
 } from '@angular/core';
 import { ProductsListComponent } from '../../components/products-list/products-list.component';
 import { ProductService } from '../../../infrastructure/services/product.service';
-import { Observable, debounceTime, filter, merge, of, pairwise, skip, startWith, switchMap } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  debounceTime,
+  filter,
+  merge,
+  of,
+  pairwise,
+  skip,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductModel } from '../../../domain/models/product/product.model';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../../components/button/button.component';
-import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
-import { ModalComponent } from '../../components/modal/modal.component';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { NavigationExtras, Router, RouterModule } from '@angular/router';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { NotificationService } from '../../../core/services/notification/notification.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '../../../shared/shared.module';
 import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 import { TABLE_HEADERS } from '../constants/table.const';
@@ -27,7 +37,6 @@ import { TABLE_HEADERS } from '../constants/table.const';
   selector: 'app-home',
   standalone: true,
   imports: [
-
     FormsModule,
     ProductsListComponent,
     HttpClientModule,
@@ -35,9 +44,8 @@ import { TABLE_HEADERS } from '../constants/table.const';
     ButtonComponent,
     RouterModule,
     ModalComponent,
-    SharedModule,
     ReactiveFormsModule,
-    LoaderComponent
+    LoaderComponent,
   ],
   providers: [ProductService],
   templateUrl: './home.component.html',
@@ -114,7 +122,10 @@ export class HomeComponent implements OnInit, OnDestroy {
    *
    * @memberof HomeComponent
    */
-  public loadingView$ = this.loaderService.visibility$
+  public loadingView$ = this.loaderService.visibility$;
+
+  subscriptions$: Subscription[] = [];
+
   /**
    * Creates an instance of HomeComponent.
    * @param {ProductService} _productService
@@ -149,7 +160,10 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @memberof HomeComponent
    */
   ngOnDestroy(): void {
-      this._notificationService.emitClose();
+    if (this.subscriptions$.length > 0) {
+      this.subscriptions$.forEach((subscription) => subscription.unsubscribe());
+    }
+    this._notificationService.emitClose();
   }
 
   /**
@@ -170,10 +184,12 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @memberof HomeComponent
    */
   private _initializeData(): void {
-    this._productService.getProducts().subscribe((products) => {
-      this._updateProductData(products);
-      this.cd.detectChanges();
-    });
+    this.subscriptions$.push(
+      this._productService.getProducts().subscribe((products) => {
+        this._updateProductData(products);
+        this.cd.detectChanges();
+      })
+    );
   }
 
   /**
@@ -196,7 +212,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       switchMap(() => this._filterProducts(this.searchControl.value))
     );
 
-    merge(inputChanges$, blurChanges$).subscribe((filteredData) => this._updateFilteredProducts(filteredData));
+    merge(inputChanges$, blurChanges$).subscribe((filteredData) =>
+      this._updateFilteredProducts(filteredData)
+    );
   }
 
   /**
@@ -248,13 +266,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (option.option === 'edit') {
       const navigationExtras: NavigationExtras = {
         state: {
-          product: this.selectedProduct
-        }
+          product: this.selectedProduct,
+        },
       };
       this.ngZone.run(() => {
         this.router.navigate([`update/${option.product.id}`], navigationExtras);
       });
-
     }
     if (option.option === 'delete') {
       this.onOpenModal();
@@ -290,13 +307,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this._productService
+    const s$ = this._productService
       .deleteProduct(this.selectedProduct?.id)
       .subscribe(() => {
-        this._notificationService.showSuccess('Producto eliminado exitosamente');
+        this._notificationService.showSuccess(
+          'Producto eliminado exitosamente'
+        );
       });
-      this._notificationService.showSuccess('Producto eliminado exitosamente');
-    this.filteredProducts = this.filteredProducts.filter(product => product.id !== this.selectedProduct?.id);
+    this.subscriptions$.push(s$);
+    this._notificationService.showSuccess('Producto eliminado exitosamente');
+    this.filteredProducts = this.filteredProducts.filter(
+      (product) => product.id !== this.selectedProduct?.id
+    );
 
     this.onCloseModal();
   }
