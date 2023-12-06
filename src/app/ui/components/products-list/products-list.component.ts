@@ -8,7 +8,7 @@ import {
 import { ProductModel } from '../../../domain/models/product/product.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PaginatorComponent } from '../paginator/paginator.component';
+import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-products-list',
@@ -47,7 +47,7 @@ export class ProductsListComponent {
    * @type {Observable<DataEndpoint<ProductModel[]>>}
    * @memberof ProductsListComponent
    */
-  @Input() products$!: ProductModel[];
+  @Input() products!: ProductModel[];
 
   /**
    *
@@ -111,7 +111,7 @@ export class ProductsListComponent {
   get paginatedProducts(): ProductModel[] {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    return this.products$.slice(startIndex, endIndex);
+    return this.products.slice(startIndex, endIndex);
   }
 
 
@@ -123,7 +123,7 @@ export class ProductsListComponent {
    * @memberof ProductsListComponent
    */
   get totalPages(): number {
-    return Math.ceil(this.products$.length / this.pageSize);
+    return Math.ceil(this.products.length / this.pageSize);
   }
 
   /**

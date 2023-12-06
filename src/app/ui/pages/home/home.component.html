@@ -15,12 +15,13 @@
     </section>
 
     <app-products-list
-      [products$]="paginatedProducts"
+      [pageSize]="pageSize"
+      [products]="paginatedProducts"
       (onMakeDropdownAction)="onDropDownActions($event)"
       [headers]="headers"
       (doPageSizeChangeAction)="onPageSizeChange($event)"
       [currentPage]="currentPage"
-      [totalItems]="filteredProducts.length"
+      [totalItems]="allProducts.length"
       (onPageChange)="onPageChange($event)"
     ></app-products-list>
 

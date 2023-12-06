@@ -33,7 +33,7 @@ import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 import { TABLE_HEADERS } from '../constants/table.const';
 import { ProductGateway } from '../../../domain/models/product/gateways/product.gateway';
-import { PaginatorComponent } from '../../components/paginator/paginator.component';
+import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-home',
@@ -160,7 +160,6 @@ export class HomeComponent implements OnInit, OnDestroy {
    */
   onPageChange(page: number): void {
     this.currentPage = page;
-
   }
 
 
@@ -172,11 +171,9 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @memberof ProductsListComponent
    */
   get paginatedProducts(): ProductModel[] {
-    console.log(this.filteredProducts)
-
     const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    console.log(endIndex)
+    const endIndex = Math.min(startIndex + this.pageSize, this.allProducts.length);
+
     return this.filteredProducts.slice(startIndex, endIndex);
   }
 
