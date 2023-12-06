@@ -10,8 +10,20 @@ import { ProductGateway } from '../../domain/models/product/gateways/product.gat
 
 export class ProductService implements ProductGateway {
   private _API_URL: string = 'https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net/ipf-msa-productosfinancieros/bp/products';
+  /**
+   * Creates an instance of ProductService.
+   * @param {HttpClient} httpClient
+   * @memberof ProductService
+   */
   constructor(private httpClient: HttpClient) {}
 
+  /**
+   *
+   *
+   * @param {string} id
+   * @return {*}  {Observable<boolean>}
+   * @memberof ProductService
+   */
   validateProductId(id: string): Observable<boolean> {
     const params: HttpParams = new HttpParams().set('id', id);
     const headers = new HttpHeaders().set('authorId', '108');

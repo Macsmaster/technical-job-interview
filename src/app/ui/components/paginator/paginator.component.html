@@ -1,11 +1,5 @@
-<nav
-  class="custom-paginator"
-  [id]="elementId"
-  role="navigation"
-  aria-label="Pagination"
-  [attr.totalElements]="totalElements"
-  [attr.elementsPerPage]="elementsPerPage"
-  [attr.multiple]="perMultipleElements"
-  [attr.type]="type"
->
-</nav>
+<div class="pagination">
+  <button *ngFor="let page of getPages()" (click)="onPageChange(page)" [class.active]="currentPage === page">
+    {{ page }}
+  </button>
+</div>

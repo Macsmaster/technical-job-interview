@@ -1,15 +1,22 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { ProductModel } from '../../../domain/models/product/product.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PaginatorComponent } from '../paginator/paginator.component';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginatorComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsListComponent {
   /**
@@ -72,7 +79,52 @@ export class ProductsListComponent {
    */
   @Output() doPageSizeChangeAction: EventEmitter<any> = new EventEmitter<any>();
 
+  /**
+   *
+   *
+   * @type {number}
+   * @memberof ProductsListComponent
+   */
+  @Input() currentPage: number = 1;
+  @Input() totalItems!: number;
 
+  @Output() onPageChange: EventEmitter<any> = new EventEmitter<any>();
+
+  /**
+   *
+   *
+   * @param {number} page
+   * @memberof ProductsListComponent
+   */
+  onChangePage(page: number): void {
+    this.onPageChange.emit(page);
+  }
+
+
+  /**
+   *
+   *
+   * @readonly
+   * @type {ProductModel[]}
+   * @memberof ProductsListComponent
+   */
+  get paginatedProducts(): ProductModel[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.products$.slice(startIndex, endIndex);
+  }
+
+
+  /**
+   *
+   *
+   * @readonly
+   * @type {number}
+   * @memberof ProductsListComponent
+   */
+  get totalPages(): number {
+    return Math.ceil(this.products$.length / this.pageSize);
+  }
 
   /**
    *
@@ -96,9 +148,9 @@ export class ProductsListComponent {
   onDropdownAction(product: ProductModel, option: string): void {
     const action = {
       product,
-      option
-    }
-    this.onMakeDropdownAction.emit(action)
+      option,
+    };
+    this.onMakeDropdownAction.emit(action);
   }
 
   /**
@@ -116,7 +168,7 @@ export class ProductsListComponent {
    * @memberof ProductsListComponent
    */
   onPageSizeChange() {
-    this.doPageSizeChangeAction.emit(this.pageSize)
+    this.doPageSizeChangeAction.emit(this.pageSize);
   }
 
   /**
@@ -149,7 +201,6 @@ export class ProductsListComponent {
   imageExists(url: string): boolean {
     const img = new Image();
     img.src = url;
-    return img.complete || (img.width + img.height) > 0;
+    return img.complete || img.width + img.height > 0;
   }
-
 }

@@ -1,69 +1,36 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-paginator',
-  standalone: true,
-  imports: [],
   templateUrl: './paginator.component.html',
-  styleUrl: './paginator.component.scss'
+  standalone: true,
+  imports: [CommonModule],
+  styleUrls: ['./paginator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaginatorComponent implements OnInit, AfterViewInit {
-  /**
-   *
-   *
-   * @type {string}
-   * @memberof PaginatorComponent
-   */
-  @Input() elementId: string = '';
-  /**
-   *
-   *
-   * @type {string}
-   * @memberof PaginatorComponent
-   */
-  @Input() totalElements: string = '';
-  /**
-   *
-   *
-   * @type {string}
-   * @memberof PaginatorComponent
-   */
-  @Input() elementsPerPage: string = '';
-  /**
-   *
-   *
-   * @type {string}
-   * @memberof PaginatorComponent
-   */
-  @Input() perMultipleElements: string  = '';
-  /**
-   *
-   *
-   * @type {string}
-   * @memberof PaginatorComponent
-   */
-  /**
-   *
-   *
-   * @type {string}
-   * @memberof PaginatorComponent
-   */
-  @Input() type: string = '';
+export class PaginatorComponent {
+  @Input() pageSize!: number;
+  @Input() currentPage!: number;
+  @Input() totalItems!: number;
 
-  /**
-   *
-   *
-   * @type {EventEmitter<number>}
-   * @memberof PaginatorComponent
-   */
-  @Output() onHandleChangePage: EventEmitter<number> = new EventEmitter<number>(true);
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor() {}
-
-  ngOnInit(): void {
-
+  get totalPages(): number {
+    return Math.ceil(this.totalItems / this.pageSize);
   }
-  ngAfterViewInit(): void {
 
+  onPageChange(page: number): void {
+    if (this.isValidPage(page)) {
+      this.pageChange.emit(page);
+    }
+  }
+
+  getPages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
+  }
+
+  private isValidPage(page: number): boolean {
+    return page >= 1 && page <= this.totalPages;
   }
 }

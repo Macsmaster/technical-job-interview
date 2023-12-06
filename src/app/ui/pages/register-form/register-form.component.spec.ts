@@ -6,12 +6,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { PRODUCT_MOCK } from '../../../shared/test/product.mock';
 import { of } from 'rxjs';
 import { convertToParamMap } from '@angular/router';
-import { NotificationService } from '../../../core/services/notification/notification.service';
 
 describe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
   let fixture: ComponentFixture<RegisterFormComponent>;
-  let notificationService: NotificationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

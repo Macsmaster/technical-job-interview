@@ -1,27 +1,33 @@
-# ProjectBankInterview
+Bank Interview
+This is an Angular project that serves as a product management system. It allows users to view, add, edit, and delete products.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+Features
+View a list of all products
+Add a new product
+Edit an existing product
+Delete a product
+Pagination support
+Loading indicators
+Installation
+Clone the repository: git clone <https://github.com/Macsmaster/technical-job-interview.git>
+Navigate into the project directory: cd <PROJECT_BANK_INTERVIEW>
+Install the dependencies: npm install
+Start the development server: ng serve
+The application will be available at http://localhost:4200.
 
-## Development server
+Usage
+Navigate through the application using the menu. You can view all products, add a new product, edit an existing product, or delete a product.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Testing
+Run the tests using the following command: npm run jest
 
-## Code scaffolding
+Built With
+Angular
+TypeScript
+Jest
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+License
+This project is licensed under the MIT License - see the LICENSE.md file for details.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Author
+Miguel angel Coy Triana

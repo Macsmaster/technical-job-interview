@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { HomeComponent } from './home.component';
@@ -66,12 +71,16 @@ describe('HomeComponent', () => {
 
       tick();
 
-      expect(result).toEqual([{ id: '158',
-      name: 'ProductC',
-      description: 'product 1 description',
-      logo: 'https://picsum.photos/200/300',
-      date_release: new Date('2023-12-05'),
-      date_revision: new Date('2023-12-05'), }]);
+      expect(result).toEqual([
+        {
+          id: '158',
+          name: 'ProductC',
+          description: 'product 1 description',
+          logo: 'https://picsum.photos/200/300',
+          date_release: new Date('2023-12-05'),
+          date_revision: new Date('2023-12-05'),
+        },
+      ]);
     }));
   });
 
@@ -80,7 +89,6 @@ describe('HomeComponent', () => {
     component.onCloseModal();
     expect(component.showModal).toBeFalsy();
   });
-
 
   it('should update allProducts and filteredProducts on _updateProductData', () => {
     const products = [PRODUCT_MOCK, PRODUCT_MOCK];
@@ -103,7 +111,9 @@ describe('HomeComponent', () => {
 
     component['_updateFilteredProducts'](filteredData);
 
-    expect(component.filteredProducts).toEqual(filteredData.slice(0, component.pageSize));
+    expect(component.filteredProducts).toEqual(
+      filteredData.slice(0, component.pageSize)
+    );
   });
 
   describe('set Test for onDropDownActions', () => {
@@ -113,7 +123,10 @@ describe('HomeComponent', () => {
 
       component.onDropDownActions(option);
 
-      expect(navigateSpy).toHaveBeenCalledWith([`update/${option.product.id}`], { state: { product: option.product } });
+      expect(navigateSpy).toHaveBeenCalledWith(
+        [`update/${option.product.id}`],
+        { state: { product: option.product } }
+      );
     });
 
     it('should call onOpenModal when option is delete', () => {
@@ -127,7 +140,10 @@ describe('HomeComponent', () => {
   });
 
   it('should call emitClose on _notificationService when the component is destroyed', () => {
-    const emitCloseSpy = jest.spyOn(component['_notificationService'], 'emitClose');
+    const emitCloseSpy = jest.spyOn(
+      component['_notificationService'],
+      'emitClose'
+    );
 
     component.ngOnDestroy();
 
@@ -136,14 +152,21 @@ describe('HomeComponent', () => {
 
   it('should delete the selected product and show a success notification on onDeleteProduct', () => {
     component.selectedProduct = PRODUCT_MOCK;
-    const deleteProductSpy = jest.spyOn(component['_productService'], 'deleteProduct').mockReturnValue(of({}));
-    const showSuccessSpy = jest.spyOn(component['_notificationService'], 'showSuccess');
+    const deleteProductSpy = jest
+      .spyOn(component['_productService'], 'deleteProduct')
+      .mockReturnValue(of({}));
+    const showSuccessSpy = jest.spyOn(
+      component['_notificationService'],
+      'showSuccess'
+    );
     const onCloseModalSpy = jest.spyOn(component, 'onCloseModal');
 
     component.onDeleteProduct();
 
     expect(deleteProductSpy).toHaveBeenCalledWith(PRODUCT_MOCK.id);
-    expect(showSuccessSpy).toHaveBeenCalledWith('Producto eliminado exitosamente');
+    expect(showSuccessSpy).toHaveBeenCalledWith(
+      'Producto eliminado exitosamente'
+    );
     expect(component.filteredProducts).not.toContain(PRODUCT_MOCK);
     expect(onCloseModalSpy).toHaveBeenCalled();
   });

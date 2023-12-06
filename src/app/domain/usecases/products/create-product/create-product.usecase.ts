@@ -13,6 +13,13 @@ export class CreateProductUseCase {
    */
   constructor(private productGateway: ProductGateway) {}
 
+  /**
+   *
+   *
+   * @param {ProductModel} product
+   * @return {*}  {Observable<ProductModel>}
+   * @memberof CreateProductUseCase
+   */
   createProduct(product: ProductModel): Observable<ProductModel> {
     return this.productGateway.createProduct(product);
   }

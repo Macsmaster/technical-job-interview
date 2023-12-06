@@ -1,7 +1,6 @@
 <section class="bp-mt-5 bp-row bp-justify-center">
-  <div class=" bp-col-xs-11 bp-col-lg-10 ">
+  <div class="bp-col-xs-11 bp-col-lg-10">
     <app-card title="Formulario de Registro">
-
       <form
         [formGroup]="registerForm"
         (ngSubmit)="onSubmit()"
@@ -108,18 +107,24 @@
             required
           />
           <span
-          class="bp-color-danger bp-font-weight-bold bp-mt-1"
-          *ngIf="isRequiredError('date_release')"
-        >
-          Este campo es requerido
-        </span>
+            class="bp-color-danger bp-font-weight-bold bp-mt-1"
+            *ngIf="isRequiredError('date_release')"
+          >
+            Este campo es requerido
+          </span>
 
-        <span class="bp-color-danger bp-font-weight-bold" *ngIf="isInvalidDate('date_release')">
-          Fecha inválida
-        </span>
-        <span class="bp-color-danger bp-font-weight-bold" *ngIf="isInvalidReleaseDate('date_release')">
-          La fecha debe ser igual o superior a la fecha actual
-        </span>
+          <span
+            class="bp-color-danger bp-font-weight-bold"
+            *ngIf="isInvalidDate('date_release')"
+          >
+            Fecha inválida
+          </span>
+          <span
+            class="bp-color-danger bp-font-weight-bold"
+            *ngIf="isInvalidReleaseDate('date_release')"
+          >
+            La fecha debe ser igual o superior a la fecha actual
+          </span>
         </div>
 
         <div>
@@ -154,6 +159,3 @@
     </app-card>
   </div>
 </section>
-
-
-

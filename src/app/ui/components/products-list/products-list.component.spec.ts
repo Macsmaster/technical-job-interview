@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProductsListComponent } from './products-list.component';
 import { PRODUCT_MOCK } from '../../../shared/test/product.mock';
 import { ProductModel } from '../../../domain/models/product/product.model';
@@ -10,9 +9,8 @@ describe('ProductsListComponent', () => {
   let fixture: ComponentFixture<ProductsListComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductsListComponent, FormsModule]
-    })
-    .compileComponents();
+      imports: [ProductsListComponent, FormsModule],
+    }).compileComponents();
     fixture = TestBed.createComponent(ProductsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -26,8 +24,7 @@ describe('ProductsListComponent', () => {
 
   it('should track items by index', () => {
     const component = fixture.componentInstance;
-    const items = [1,2,8,5,6,4,9];
-
+    const items = [1, 2, 8, 5, 6, 4, 9];
 
     const result = component.trackByFn(0, items[0]);
 
@@ -46,7 +43,7 @@ describe('ProductsListComponent', () => {
 
   it('Should set the contrary value of showDropdown when openDropdown is called', () => {
     component.showDropdown = true;
-    component.openDropdown()
+    component.openDropdown();
     expect(component.showDropdown).toBeFalsy();
   });
 
@@ -85,9 +82,5 @@ describe('ProductsListComponent', () => {
       const result = component.getInitials(' John Doe ');
       expect(result).toBe('JD');
     });
-
-
   });
-
-
 });

@@ -82,7 +82,8 @@ select {
   }
 }
 
-.initials-circle {
+.initials-circle,
+.image-circle {
   width: 50px;
   height: 50px;
   background-color: #c0c7d9;
@@ -91,4 +92,5 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }

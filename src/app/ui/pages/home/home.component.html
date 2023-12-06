@@ -1,7 +1,12 @@
 <section class="bp-my-5 bp-w-100 bp-justify-center bp-row">
   <div class="bp-col-xs-11 bp-col-lg-10">
     <section class="bp-justify-between bp-d-flex bp-w-100 bp-mb-1 bp-flex-wrap">
-      <input type="text" placeholder="Search" class="custom-input-text" [formControl]="searchControl" />
+      <input
+        type="text"
+        placeholder="Search"
+        class="custom-input-text"
+        [formControl]="searchControl"
+      />
       <app-button
         [textBtn]="'Agregar'"
         [isPrimary]="true"
@@ -10,19 +15,26 @@
     </section>
 
     <app-products-list
-
-      [products$]="filteredProducts"
+      [products$]="paginatedProducts"
       (onMakeDropdownAction)="onDropDownActions($event)"
       [headers]="headers"
       (doPageSizeChangeAction)="onPageSizeChange($event)"
+      [currentPage]="currentPage"
+      [totalItems]="filteredProducts.length"
+      (onPageChange)="onPageChange($event)"
     ></app-products-list>
+
   </div>
 </section>
+
+
 
 <app-modal
   #modalDelete
   [showModal]="showModal"
-  [modalTitle]="'¿Estás seguro de eliminar el producto ' + selectedProduct?.name + '?'"
+  [modalTitle]="
+    '¿Estás seguro de eliminar el producto ' + selectedProduct?.name + '?'
+  "
   [modalText]="'Esta acción no se puede deshacer'"
   [btnPrimaryName]="'Eliminar'"
   [btnSecondaryName]="'Cancelar'"
@@ -35,4 +47,3 @@
 <ng-container *ngIf="loadingView$ | async">
   <app-loader></app-loader>
 </ng-container>
-

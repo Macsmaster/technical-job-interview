@@ -4,7 +4,9 @@
       <tr>
         <ng-container *ngIf="headers?.length">
           <th hidden>Id</th>
-          <th class="bp-text-center" *ngFor="let header of headers">{{ header }}</th>
+          <th class="bp-text-center" *ngFor="let header of headers">
+            {{ header }}
+          </th>
         </ng-container>
       </tr>
     </thead>
@@ -13,7 +15,7 @@
         <td hidden>{{ product.id }}</td>
         <td class="bp-d-flex bp-justify-center">
           <ng-container *ngIf="imageExists(product.logo)">
-            <img [src]="product.logo" [alt]="product.name" />
+            <img [src]="product.logo" [alt]="product.name" class="image-circle" />
           </ng-container>
           <ng-container *ngIf="!imageExists(product.logo)">
             <div class="initials-circle">{{ getInitials(product.name) }}</div>
@@ -52,6 +54,12 @@
 
   <section class="bp-d-flex bp-justify-between bp-mx-2 bp-my-1">
     <p>{{ products$?.length }} Resultados</p>
+    <app-paginator
+    [pageSize]="pageSize"
+    [currentPage]="currentPage"
+    [totalItems]="totalItems"
+    (pageChange)="onChangePage($event)"
+  ></app-paginator>
     <div class="">
       <select
         id="pageSize"
@@ -63,5 +71,8 @@
         <option value="20">20</option>
       </select>
     </div>
+
+
   </section>
+
 </section>

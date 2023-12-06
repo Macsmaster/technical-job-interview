@@ -33,6 +33,7 @@ import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 import { TABLE_HEADERS } from '../constants/table.const';
 import { ProductGateway } from '../../../domain/models/product/gateways/product.gateway';
+import { PaginatorComponent } from '../../components/paginator/paginator.component';
 
 @Component({
   selector: 'app-home',
@@ -47,9 +48,11 @@ import { ProductGateway } from '../../../domain/models/product/gateways/product.
     ModalComponent,
     ReactiveFormsModule,
     LoaderComponent,
+    PaginatorComponent,
   ],
-  providers: [ProductService,
-    {provide: ProductGateway, useClass: ProductService},
+  providers: [
+    ProductService,
+    { provide: ProductGateway, useClass: ProductService },
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -113,7 +116,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @type {number}
    * @memberof HomeComponent
    */
-  pageSize!: number;
+  pageSize: number = 5;
   /**
    * Creates an instance of HomeComponent.
    * @param {ProductService} _productService
@@ -147,6 +150,48 @@ export class HomeComponent implements OnInit, OnDestroy {
     private ngZone: NgZone
   ) {}
 
+  currentPage: number = 1;
+
+  /**
+   *
+   *
+   * @param {number} page
+   * @memberof ProductsListComponent
+   */
+  onPageChange(page: number): void {
+    this.currentPage = page;
+
+  }
+
+
+  /**
+   *
+   *
+   * @readonly
+   * @type {ProductModel[]}
+   * @memberof ProductsListComponent
+   */
+  get paginatedProducts(): ProductModel[] {
+    console.log(this.filteredProducts)
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    console.log(endIndex)
+    return this.filteredProducts.slice(startIndex, endIndex);
+  }
+
+
+  /**
+   *
+   *
+   * @readonly
+   * @type {number}
+   * @memberof ProductsListComponent
+   */
+  get totalPages(): number {
+    return Math.ceil(this.allProducts.length / this.pageSize);
+  }
+
   /**
    *
    *
@@ -155,6 +200,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._initializeData();
     this._setupSearchControlSubscription();
+    this.onPageSizeChange(this.pageSize)
   }
 
   /**
@@ -178,6 +224,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   onPageSizeChange(pageSize: number): void {
     this.pageSize = pageSize;
     this._updateFilteredProducts(this.allProducts);
+
   }
 
   /**

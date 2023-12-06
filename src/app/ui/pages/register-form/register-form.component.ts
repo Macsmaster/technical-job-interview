@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CardComponent } from '../../../shared/components/card/card.component';
 import { CommonModule } from '@angular/common';
 import {
@@ -19,7 +14,13 @@ import { NotificationService } from '../../../core/services/notification/notific
 import { CustomValidators } from '../../../shared/validators/custom.validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductModel } from '../../../domain/models/product/product.model';
-import { MAX_LENGTH_DESCRIPTION, MAX_LENGTH_NAME, MIN_LENGTH_DESCRIPTION, MIN_LENGTH_ID, MIN_LENGTH_NAME } from '../constants/magic-numbers.const';
+import {
+  MAX_LENGTH_DESCRIPTION,
+  MAX_LENGTH_NAME,
+  MIN_LENGTH_DESCRIPTION,
+  MIN_LENGTH_ID,
+  MIN_LENGTH_NAME,
+} from '../constants/magic-numbers.const';
 import { ProductGateway } from '../../../domain/models/product/gateways/product.gateway';
 
 @Component({
@@ -32,19 +33,56 @@ import { ProductGateway } from '../../../domain/models/product/gateways/product.
     ButtonComponent,
     CardComponent,
   ],
-  providers: [ProductService,
-    {provide: ProductGateway, useClass: ProductService},],
+  providers: [
+    ProductService,
+    { provide: ProductGateway, useClass: ProductService },
+  ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.scss',
 })
 export class RegisterFormComponent implements OnInit, OnDestroy {
+  /**
+   *
+   *
+   * @type {UntypedFormGroup}
+   * @memberof RegisterFormComponent
+   */
   registerForm!: UntypedFormGroup;
 
+  /**
+   *
+   *
+   * @type {Subscription[]}
+   * @memberof RegisterFormComponent
+   */
   subscriptions$: Subscription[] = [];
 
+  /**
+   *
+   *
+   * @type {ProductModel}
+   * @memberof RegisterFormComponent
+   */
   editedProduct!: ProductModel;
+
+  /**
+   *
+   *
+   * @type {boolean}
+   * @memberof RegisterFormComponent
+   */
   isEditionPage: boolean = false;
 
+  /**
+   * Creates an instance of RegisterFormComponent.
+   * @param {FormBuilder} fb
+   * @param {ProductService} productService
+   * @param {NotificationService} notificationService
+   * @param {ActivatedRoute} route
+   * @param {Router} router
+   * @param {ChangeDetectorRef} cd
+   * @memberof RegisterFormComponent
+   */
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
@@ -54,11 +92,21 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef
   ) {}
 
+  /**
+   *
+   *
+   * @memberof RegisterFormComponent
+   */
   ngOnInit(): void {
     this._initializeForm();
     this._subscribeToRouteParams();
   }
 
+  /**
+   *
+   *
+   * @memberof RegisterFormComponent
+   */
   ngOnDestroy(): void {
     if (this.subscriptions$.length > 0) {
       this.subscriptions$.forEach((subscription) => subscription.unsubscribe());
@@ -66,6 +114,12 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.notificationService.emitClose();
   }
 
+  /**
+   *
+   *
+   * @private
+   * @memberof RegisterFormComponent
+   */
   private _initializeForm(): void {
     this.loadForm();
     this._onSubscripteDateRelease();
@@ -176,7 +230,6 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     return formattedDate;
   }
 
-
   /**
    *
    *
@@ -255,7 +308,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   private _validateProductId(): void {
     const productId = this.registerForm.value.id;
 
-   const s$ = this.productService
+    const s$ = this.productService
       .validateProductId(productId)
       .pipe(
         mergeMap((isProductIdValid) => {
@@ -275,7 +328,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
           this.notificationService.showError('Error al crear el producto');
         },
       });
-      this.subscriptions$.push(s$);
+    this.subscriptions$.push(s$);
   }
 
   /**
@@ -302,13 +355,13 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       id: this.formControls['id'].value,
       date_revision: this.formControls['date_revision'].value,
     };
-   const s$ = this.productService.updateProduct(formData).subscribe({
+    const s$ = this.productService.updateProduct(formData).subscribe({
       next: (_response) => {
         this._handleSuccessRequest('Producto modificado exitosamente');
         this.router.navigate(['/']);
       },
       error: (_error) => {
-       this.notificationService.showError('Error al modificar el producto');
+        this.notificationService.showError('Error al modificar el producto');
       },
     });
     this.subscriptions$.push(s$);
