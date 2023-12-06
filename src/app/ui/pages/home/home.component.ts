@@ -33,7 +33,7 @@ import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 import { TABLE_HEADERS } from '../constants/table.const';
 import { ProductGateway } from '../../../domain/models/product/gateways/product.gateway';
-import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-home',
@@ -48,7 +48,7 @@ import { PaginatorComponent } from '../../../shared/components/paginator/paginat
     ModalComponent,
     ReactiveFormsModule,
     LoaderComponent,
-    PaginatorComponent,
+    SkeletonComponent
   ],
   providers: [
     ProductService,
@@ -60,6 +60,14 @@ import { PaginatorComponent } from '../../../shared/components/paginator/paginat
 })
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('modalDelete') modalDelete!: ModalComponent;
+
+  /**
+   *
+   *
+   * @type {boolean}
+   * @memberof HomeComponent
+   */
+  loading: boolean = true;
 
   /**
    *
@@ -231,10 +239,26 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @memberof HomeComponent
    */
   private _initializeData(): void {
+    this.loaderService.show();
+
     this.subscriptions$.push(
-      this._productService.getProducts().subscribe((products) => {
-        this._updateProductData(products);
-        this.cd.detectChanges();
+      this._productService.getProducts().subscribe( {
+        next: (products) => {
+          this.loading = false;
+          this._updateProductData(products);
+          this._updateFilteredProducts(products);
+          this.cd.detectChanges();
+        },
+        error: (error) => {
+          this.loading = false;
+          this._notificationService.showError(
+            'Ha ocurrido un error al cargar los productos'
+          );
+        },
+        complete: () => {
+          this.loading = false;
+          this.loaderService.hide();
+        }
       })
     );
   }
@@ -249,7 +273,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const inputChanges$ = this.searchControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
-      switchMap((searchTerm: any) => this._filterProducts(searchTerm))
+      switchMap((searchTerm: string) => this._filterProducts(searchTerm))
     );
 
     const blurChanges$ = this.searchControl.valueChanges.pipe(
@@ -269,12 +293,12 @@ export class HomeComponent implements OnInit, OnDestroy {
    *
    * @private
    * @param {string} searchTerm
-   * @return {*}  {Observable<any[]>}
+   * @return {*}  {Observable<ProductModel[]>}
    * @memberof HomeComponent
    */
-  private _filterProducts(searchTerm: string): Observable<any[]> {
+  private _filterProducts(searchTerm: string): Observable<ProductModel[]> {
     return of(
-      this.allProducts.filter((product) =>
+      this.allProducts.filter((product: ProductModel) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -330,7 +354,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    *
    * @memberof HomeComponent
    */
-  onOpenModal() {
+  onOpenModal(): void {
     this.showModal = true;
   }
 
@@ -339,7 +363,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    *
    * @memberof HomeComponent
    */
-  onCloseModal() {
+  onCloseModal(): void {
     this.showModal = false;
   }
 
@@ -349,7 +373,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @return {*}
    * @memberof HomeComponent
    */
-  onDeleteProduct() {
+  onDeleteProduct(): void {
     if (this.selectedProduct === null) {
       return;
     }

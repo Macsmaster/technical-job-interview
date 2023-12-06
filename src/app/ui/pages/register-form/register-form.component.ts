@@ -22,6 +22,7 @@ import {
   MIN_LENGTH_NAME,
 } from '../constants/magic-numbers.const';
 import { ProductGateway } from '../../../domain/models/product/gateways/product.gateway';
+import { LoaderService } from '../../../core/services/loader/loader.service';
 
 @Component({
   selector: 'app-register-form',
@@ -89,7 +90,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private loaderService: LoaderService
   ) {}
 
   /**
@@ -306,6 +308,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   }
 
   private _validateProductId(): void {
+    this.loaderService.show();
     const productId = this.registerForm.value.id;
 
     const s$ = this.productService
@@ -327,6 +330,9 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         error: (_error) => {
           this.notificationService.showError('Error al crear el producto');
         },
+        complete: () => {
+          this.loaderService.hide();
+        }
       });
     this.subscriptions$.push(s$);
   }

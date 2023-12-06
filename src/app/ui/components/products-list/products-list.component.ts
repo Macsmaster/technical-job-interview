@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from '../../../shared/components/paginator/paginator.component';
 
+
 @Component({
   selector: 'app-products-list',
   standalone: true,
@@ -88,6 +89,7 @@ export class ProductsListComponent {
   @Input() currentPage: number = 1;
   @Input() totalItems!: number;
 
+
   @Output() onPageChange: EventEmitter<any> = new EventEmitter<any>();
 
   /**
@@ -100,31 +102,6 @@ export class ProductsListComponent {
     this.onPageChange.emit(page);
   }
 
-
-  /**
-   *
-   *
-   * @readonly
-   * @type {ProductModel[]}
-   * @memberof ProductsListComponent
-   */
-  get paginatedProducts(): ProductModel[] {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.products.slice(startIndex, endIndex);
-  }
-
-
-  /**
-   *
-   *
-   * @readonly
-   * @type {number}
-   * @memberof ProductsListComponent
-   */
-  get totalPages(): number {
-    return Math.ceil(this.products.length / this.pageSize);
-  }
 
   /**
    *

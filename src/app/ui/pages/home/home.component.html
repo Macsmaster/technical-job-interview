@@ -14,7 +14,15 @@
       ></app-button>
     </section>
 
-    <app-products-list
+
+    <div *ngIf="loading; else loadedContent">
+
+      <app-skeleton></app-skeleton>
+    </div>
+    <ng-template #loadedContent>
+
+
+      <app-products-list
       [pageSize]="pageSize"
       [products]="paginatedProducts"
       (onMakeDropdownAction)="onDropDownActions($event)"
@@ -24,6 +32,7 @@
       [totalItems]="allProducts.length"
       (onPageChange)="onPageChange($event)"
     ></app-products-list>
+    </ng-template>
 
   </div>
 </section>
@@ -48,3 +57,5 @@
 <ng-container *ngIf="loadingView$ | async">
   <app-loader></app-loader>
 </ng-container>
+
+

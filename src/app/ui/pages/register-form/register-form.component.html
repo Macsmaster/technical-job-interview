@@ -1,5 +1,5 @@
-<section class="bp-mt-5 bp-row bp-justify-center">
-  <div class="bp-col-xs-11 bp-col-lg-10">
+<section class="bp-mt-5 bp-row bp-justify-center register_form__container">
+  <div class="bp-col-xs-12 bp-col-lg-10">
     <app-card title="Formulario de Registro">
       <form
         [formGroup]="registerForm"
@@ -29,7 +29,7 @@
             class="bp-color-danger bp-font-weight-bold"
             *ngIf="isMinLengthError('id')"
           >
-            Ingrese mínimo 3 caracteres*
+            Ingrese mínimo 3 caracteres
           </span>
         </div>
 

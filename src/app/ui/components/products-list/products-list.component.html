@@ -15,7 +15,11 @@
         <td hidden>{{ product.id }}</td>
         <td class="bp-d-flex bp-justify-center">
           <ng-container *ngIf="imageExists(product.logo)">
-            <img [src]="product.logo" [alt]="product.name" class="image-circle" />
+            <img
+              [src]="product.logo"
+              [alt]="product.name"
+              class="image-circle"
+            />
           </ng-container>
           <ng-container *ngIf="!imageExists(product.logo)">
             <div class="initials-circle">{{ getInitials(product.name) }}</div>
@@ -36,14 +40,14 @@
           <div class="dropdown" *ngIf="showDropdown">
             <ul>
               <li>
-                <a
-                  (click)="(onDropdownAction)"
-                  (click)="onDropdownAction(product, 'edit')"
-                  >Editar</a
-                >
+                <a (click)="onDropdownAction(product, 'edit')">
+                  <i class="material-icons">edit</i> Editar
+                </a>
               </li>
               <li>
-                <a (click)="onDropdownAction(product, 'delete')">Eliminar</a>
+                <a (click)="onDropdownAction(product, 'delete')">
+                  <i class="material-icons">delete</i> Eliminar
+                </a>
               </li>
             </ul>
           </div>
@@ -53,13 +57,8 @@
   </table>
 
   <section class="bp-d-flex bp-justify-between bp-mx-2 bp-my-1">
-    <p>{{ products?.length }} Resultados de {{totalItems}}</p>
-    <app-paginator
-    [pageSize]="pageSize"
-    [currentPage]="currentPage"
-    [totalItems]="totalItems"
-    (pageChange)="onChangePage($event)"
-  ></app-paginator>
+    <p>{{ products?.length }} Resultados de {{ totalItems }}</p>
+
     <div class="">
       <select
         id="pageSize"
@@ -71,9 +70,13 @@
         <option value="20">20</option>
       </select>
     </div>
-
-
   </section>
-
-
+  <section class="bp-d-flex bp-justify-center  bp-mb-1">
+    <app-paginator
+      [pageSize]="pageSize"
+      [currentPage]="currentPage"
+      [totalItems]="totalItems"
+      (pageChange)="onChangePage($event)"
+    ></app-paginator>
+  </section>
 </section>
