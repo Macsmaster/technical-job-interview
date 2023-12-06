@@ -32,6 +32,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 import { TABLE_HEADERS } from '../constants/table.const';
+import { ProductGateway } from '../../../domain/models/product/gateways/product.gateway';
 
 @Component({
   selector: 'app-home',
@@ -47,7 +48,9 @@ import { TABLE_HEADERS } from '../constants/table.const';
     ReactiveFormsModule,
     LoaderComponent,
   ],
-  providers: [ProductService],
+  providers: [ProductService,
+    {provide: ProductGateway, useClass: ProductService},
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

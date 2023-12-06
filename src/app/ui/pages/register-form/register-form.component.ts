@@ -20,6 +20,7 @@ import { CustomValidators } from '../../../shared/validators/custom.validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductModel } from '../../../domain/models/product/product.model';
 import { MAX_LENGTH_DESCRIPTION, MAX_LENGTH_NAME, MIN_LENGTH_DESCRIPTION, MIN_LENGTH_ID, MIN_LENGTH_NAME } from '../constants/magic-numbers.const';
+import { ProductGateway } from '../../../domain/models/product/gateways/product.gateway';
 
 @Component({
   selector: 'app-register-form',
@@ -31,6 +32,8 @@ import { MAX_LENGTH_DESCRIPTION, MAX_LENGTH_NAME, MIN_LENGTH_DESCRIPTION, MIN_LE
     ButtonComponent,
     CardComponent,
   ],
+  providers: [ProductService,
+    {provide: ProductGateway, useClass: ProductService},],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.scss',
 })
@@ -304,8 +307,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         this._handleSuccessRequest('Producto modificado exitosamente');
         this.router.navigate(['/']);
       },
-      error: (error) => {
-        console.log(error);
+      error: (_error) => {
+       this.notificationService.showError('Error al modificar el producto');
       },
     });
     this.subscriptions$.push(s$);
